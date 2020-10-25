@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-TEST TEST
 <?php
 include "classes/users.class.php";
 
