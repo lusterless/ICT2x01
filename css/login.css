@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 22, 2020, 12:48:40 AM
+    Author     : Dell
+*/
+
+body {
+    background-image: url("../images/loginBG.jpg");
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    background-size: cover;
+}
+
+#loginForm {
+    display: inline-block;
+    font-size: 1.3em;
+    width: auto;
+    height: auto;
+    margin-top: 25%;
+    margin-left: 15%;
+}
+
+#loginForm label{
+    width: 100px;
+    display: inline-block;
+}
+
+
+.loginBtn{
+    margin-top: 7px;
+    display: inline-block;
+    width: auto;
+    float: right;
+}
