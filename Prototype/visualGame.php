@@ -48,7 +48,7 @@ else{
         
         //Temporary generate date MM-DD-YYYY
         var x = new Date('9/04/2020');  //start module date
-        var y = new Date('12/25/2020');  //end module date
+        var y = new Date('10/25/2020');  //end module date
         const diffTime = Math.abs(y - x);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         //calculate difference = how many pixels
@@ -76,6 +76,8 @@ else{
         //canvase
         let canvas = document.querySelector('canvas');
         let ctx = canvas.getContext('2d');
+        
+        
 
         function imginit() {
           // future animation code goes here
