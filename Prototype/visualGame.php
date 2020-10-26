@@ -126,21 +126,25 @@ else{
         function imginit() {
           // future animation code goes here
           //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          //ctx.drawImage(img, 0, 0, 600, 60, 0, 100, 1200 , 120);
           ctx.drawImage(img, 0, 170);
         }
         
         function treasureinit() {
           // future animation code goes here
-          //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          //ctx.drawImage(treasure, 0, 0, 600, 60, 360, 100, 1200 , 120);
-          //ctx.drawImage(treasure, 0, 0, 600, 60, 730, 100, 1200 , 120);
           ctx.drawImage(treasure, 50, 130);
+            elements.push({
+                x: 50,
+                y: 130,
+                sizex: 80,
+                sizey: 60,
+                clicked: function(){
+                    showFormative();
+                }
+            })
         }
         
         function streasureinit() {
           // future animation code goes here
-          //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
           ctx.drawImage(streasure, 130, 110);
         }
         /*
