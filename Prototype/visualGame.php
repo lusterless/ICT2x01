@@ -34,7 +34,7 @@ else{
         <?php
             include "navBar.php";
         ?>
-        <canvas id="interactiveCanvas" width="1200" height="230"></canvas>
+        <canvas id="interactiveCanvas" width="900" height="230"></canvas>
         <?php
             include "footer.php";
         ?>
@@ -48,11 +48,11 @@ else{
         
         //Temporary generate date MM-DD-YYYY
         var x = new Date('9/04/2020');  //start module date
-        var y = new Date('12/12/2020');  //end module date
+        var y = new Date('12/25/2020');  //end module date
         const diffTime = Math.abs(y - x);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         //calculate difference = how many pixels
-        var portion = Math.floor(1140 / diffDays);
+        var portion = Math.floor(820 / diffDays);
         
         //calculate number of days from original start date of module: current date - start date
         const timediff = Math.abs(n - x);
@@ -62,16 +62,15 @@ else{
      //   img.onload = function() {
       //    imginit();
        // };
-        
-        
+
         let treasure = new Image();
-        treasure.src='images/Chest.png';
+        treasure.src='images/Chest1.png';
         let streasure = new Image();
-        streasure.src='images/SparkleChest.png';
+        streasure.src='images/sparklechest1.png';
         let completed = new Image();
         completed.src='images/complete.png';
         let dino = new Image();
-        dino.src='images/Dino.png';
+        dino.src='images/Dino1.png';
         let bin = new Image();
         bin.src='images/Bin.png';
         //canvase
@@ -81,35 +80,40 @@ else{
         function imginit() {
           // future animation code goes here
           //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          ctx.drawImage(img, 0, 0, 600, 60, 0, 100, 1200 , 120);
+          //ctx.drawImage(img, 0, 0, 600, 60, 0, 100, 1200 , 120);
+          ctx.drawImage(img, 0, 170);
         }
         
         function treasureinit() {
           // future animation code goes here
           //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          ctx.drawImage(treasure, 0, 0, 600, 60, 360, 100, 1200 , 120);
-          ctx.drawImage(treasure, 0, 0, 600, 60, 730, 100, 1200 , 120);
+          //ctx.drawImage(treasure, 0, 0, 600, 60, 360, 100, 1200 , 120);
+          //ctx.drawImage(treasure, 0, 0, 600, 60, 730, 100, 1200 , 120);
+          ctx.drawImage(treasure, 50, 130);
         }
         
         function streasureinit() {
           // future animation code goes here
           //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-          ctx.drawImage(streasure, 0, 0, 600, 60, 1090, 100, 1200 , 120);
+          ctx.drawImage(streasure, 130, 110);
         }
-        
+        /*
         function bininit(){
             ctx.drawImage(bin, 0, 0, 600, 60, 10, 100, 1200 , 120);
-        }
+        }*/
         
         function dinoinit() {
           // future animation code goes here
           //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
           if(n >= y){
-            ctx.drawImage(completed, 0, 0, 600, 60, 380, 60, 1400 , 130);  
-            ctx.drawImage(dino, 0, 0, 600, 60, 840, 100, 1200 , 120);  
+            //ctx.drawImage(completed, 0, 0, 600, 60, 380, 60, 1400 , 130); 
+            ctx.drawImage(completed, 350, 60, 200,100); 
+            //ctx.drawImage(dino, 0, 0, 600, 60, 840, 100, 1200 , 120);
+            ctx.drawImage(dino, 820, 110);
           }
           else{
-            ctx.drawImage(dino, 0, 0, 600, 60, daysdiff * portion, 100, 1200 , 120);
+            ctx.drawImage(dino, daysdiff * portion, 110);  
+            //ctx.drawImage(dino, 0, 0, 600, 60, daysdiff * portion, 100, 1200 , 120);
           }
         }
         
@@ -121,7 +125,7 @@ else{
             treasureinit();
             streasureinit();
             dinoinit();
-            bininit();
+            //bininit();
         }
         
         
