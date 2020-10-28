@@ -43,6 +43,7 @@
         echo "<p>".$Details->getUser()."</p>";
         echo "<p>".$Details->getTel()."</p>";
         echo "<p>".$Details->getRole()."</p>";
+        echo "<p>".$Details->getEmail()."</p>";
        // echo "<p>".$Details->getStudentInfo()->get_mod()."</p>";
       ?>
     </div>

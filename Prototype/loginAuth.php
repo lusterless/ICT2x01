@@ -19,20 +19,20 @@ if ($conn->connect_error)
     echo "<h1>".$_SESSION['dberror']."</h1>";
 }
 else{
-    $sql = "SELECT * FROM users WHERE studentid='$username' AND password='$password'";
+    $sql = "SELECT * FROM users WHERE email='$username' AND password='$password'";
     $result = $conn->query($sql);
     
     if($result->num_rows > 0){
         $row = $result->fetch_assoc();
         if($row["role"]=="student"){
-            $student = new students($row["tel"], $row["name"], $username, $row["role"], $row["module"]);
+            $student = new students($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["module"], $username);
             //more extract
             session_start();
             $_SESSION["sessionInfo"]= $student;
             header("Location:visualGame.php");
         }
         else{
-            $professor = new Professor($row["tel"], $row["name"], $username, $row["role"], $row["module"]);
+            $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["module"], $username);
             session_start();
             //get start end date
             //add enrolled students
