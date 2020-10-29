@@ -38,80 +38,85 @@ else{
   <body>
     <?php
         include "navBar.php";
-    ?>
-    <form id="app" class="container" action="" method="post" @submit="submit">
-      <!-- Error Banner -->
-      <p v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-        <ul>
-            <li v-for="error in errors">{{ error }}</li>
-        </ul>
-      </p>
-      <!-- Create a Module -->
-      <div v-if="step === 1">
-        <h1>Create a Module</h1>
-        <br>Module Name: <input placeholder="Module name" v-model="module" />
-        <br>Module Start date: <input type="date" v-model="startdate" />
-        <br>Module End date: <input type="date" v-model="enddate" />
-        <button type="button" @click="nextStep">Next</button>
-      </div>
-      <!-- Add Assessment for Module -->
-      <div v-if="step === 2">
-        <h1>Add Assessment for Module {{ module }}</h1>
-        <div v-for="(assessment, index) in assessments">
-          <div>
-            <h2>Assessment {{ index + 1 }}</h2>
-            <select v-model="assessment.category">
-              <option disabled value="">Please select one</option>
-              <option v-for="category in categories">{{ category }}</option>
-            </select>
-            <input type="text" v-model="assessment.weightage" />
-            <button type="button"v-show="assessments.length > 1" @click="removeAssessment(index)">
-              Remove Assessment
-            </button>
-          </div>
-          <div>
-              
-            <h3>Sub-assessments for Assessment {{ index + 1 }}</h3>
-            <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
-              <input type="text" v-model="subAssessment.name" />
-              <input type="text" v-model="subAssessment.weightage" />
-              <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button> 
-              <button type="button" v-show="assessment.subAssessments.length > 1" @click="removeSubAssessment(index, subIndex)">
-                Remove Subassessment
-              </button>
-            
-            </div>
-          </div>
-        </div>
-        <button type="button" id="add" @click="addAssessment">
-          Add Assessment
-        </button>
-        <div>
-          <button type="button" @click="prevStep">Go Back</button>
-          <button type="button" @click="nextStep">Next</button>
-        </div>
-      </div>
-      <!-- Add Students -->
-      <div v-if="step === 3">
-        <div>
-          <h1>Add Students to Module</h1>
-          <br>
-            <input id="fileUpload" type="file" hidden>
-            <button @click="chooseFiles()">Choose</button>
-          <button type="button" @click="prevStep">Go Back</button>
-          <button type="button" @click="nextStep">Next</button>
-        </div>
-      </div>
-      <!-- Confirmation -->
-      <div v-if="step === 4">
-        <div>
-          <button type="button" @click="prevStep">Go Back</button>
-          <button type="button" @click="nextStep">Next</button>
-        </div>
-      </div>
-    </form>
-    <?php
+    
+        if($Details->getMod() == "")
+        {
+            echo '<form id="app" class="container" action="" method="post" @submit="submit">
+              <!-- Error Banner -->
+              <p v-if="errors.length">
+                <b>Please correct the following error(s):</b>
+                <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                </ul>
+              </p>
+              <!-- Create a Module -->
+              <div v-if="step === 1">
+                <h1>Create a Module</h1>
+                <br>Module Name: <input placeholder="Module name" v-model="module" />
+                <br>Module Start date: <input type="date" v-model="startdate" />
+                <br>Module End date: <input type="date" v-model="enddate" />
+                <button type="button" @click="nextStep">Next</button>
+              </div>
+              <!-- Add Assessment for Module -->
+              <div v-if="step === 2">
+                <h1>Add Assessment for Module {{ module }}</h1>
+                <div v-for="(assessment, index) in assessments">
+                  <div>
+                    <h2>Assessment {{ index + 1 }}</h2>
+                    <select v-model="assessment.category">
+                      <option disabled value="">Please select one</option>
+                      <option v-for="category in categories">{{ category }}</option>
+                    </select>
+                    <input type="text" v-model="assessment.weightage" />
+                    <button type="button"v-show="assessments.length > 1" @click="removeAssessment(index)">
+                      Remove Assessment
+                    </button>
+                  </div>
+                  <div>
+
+                    <h3>Sub-assessments for Assessment {{ index + 1 }}</h3>
+                    <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
+                      <input type="text" v-model="subAssessment.name" />
+                      <input type="text" v-model="subAssessment.weightage" />
+                      <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button> 
+                      <button type="button" v-show="assessment.subAssessments.length > 1" @click="removeSubAssessment(index, subIndex)">
+                        Remove Subassessment
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="add" @click="addAssessment">
+                  Add Assessment
+                </button>
+                <div>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
+              <!-- Add Students -->
+              <div v-if="step === 3">
+                <div>
+                  <h1>Add Students to Module</h1>
+                  <br>
+                    <input id="fileUpload" type="file" hidden>
+                    <button @click="chooseFiles()">Choose</button>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
+              <!-- Confirmation -->
+              <div v-if="step === 4">
+                <div>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
+            </form>';
+        }
+        else{
+            echo '<h1>Got Module</h1>';
+        }
         include "footer.php";
     ?>  
     <script src="js/createPageProf.js"></script>
