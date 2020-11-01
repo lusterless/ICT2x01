@@ -25,26 +25,29 @@ abstract class Users{
 }
 
 class students extends Users{
-    private $summativeFeedbacks, $formativeFeedbacks;
+    private $summativeFeedbacks = [];
+    private $formativeFeedbacks = [];
     public function __construct($tel, $name, $user, $role, $email){
         parent::__construct($tel, $name, $user, $role, $email);
     }
     public function setSummative($summativeFeedback){
-        $this->summativeFeedbacks=array_push($this->summativeFeedbacks,$summativeFeedback);
+        //$this->summativeFeedbacks=array_push($this->summativeFeedbacks, (object) $summativeFeedback);
+        $this->summativeFeedbacks[] = $summativeFeedback;
     }
     public function setFormative($formativeFeedback){
-        $this->formativeFeedbacks=array_push($this->formativeFeedbacks,$formativeFeedback);
+        //$this->formativeFeedbacks=array_push($this->formativeFeedbacks, (object) $formativeFeedback);
+        $this->formativeFeedbacks[] = $formativeFeedback;
     }
     public function getSummative(){return $this->summativeFeedbacks;}
     public function getFormative(){return $this->formativeFeedbacks;}
 }
 
 class Professor extends Users{
-    private $student;
+    private $student = [];
     public function __construct($tel, $name, $user, $role, $email){
         parent::__construct($tel, $name, $user, $role, $email);
     }
-    public function studentPush($student){$this->student= array_push($this->student,$student);}
+    public function studentPush($student){$this->student= array_push($this->student, (object) $student);}
     public function getStudents(){return $this->student;}
 }
 

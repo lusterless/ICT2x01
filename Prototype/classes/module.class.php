@@ -19,20 +19,24 @@ include "classes/feedbacks.class.php";
  * 
  *  */
 class Module{
-    private $modID, $startDate, $endDate, $components, $totalEnrol, $formativeFeedback;
+    private $modID, $startDate, $endDate, $totalEnrol;
+    private $formativeFeedback = [];
+    private $components = [];
     public function __construct($modID, $startDate, $endDate, $enrol) {
         $this->modID = $modID;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->totalEnrol = $enrol;
     }
-    public function pushComponent($componentID, $componentWeight){
-        $comp = new Component($componentID, $componentWeight);
-        $this->components = array_push($this->components, $comp);
+    public function pushComponent($componentID, $componentName, $componentWeight){
+        $comp = new Component($componentID, $componentName, $componentWeight);
+        //$this->components = array_push($this->components, (object) $comp);
+        $this->components[] = $comp;
     }
     public function giveFormativeFeedback($feedback){
         $fb = new formativeFeedback($feedback);
-        $this->formativeFeedback = array_push($this->formativeFeedback, $fb);
+        //$this->formativeFeedback = array_push($this->formativeFeedback, (object) $fb);
+        $this->formativeFeedback[] = $fb;
     }
     public function getMod(){return $this->modID;}
     public function getStart(){return $this->startDate;}
@@ -46,18 +50,22 @@ class Module{
 }
 
 class Component{
-    private $componentID, $componentWeight, $subComponent;
-    public function __construct($componentID, $componentWeight){
+    private $componentID, $componentName, $componentWeight;
+    private $subComponent = [];
+    public function __construct($componentID, $componentName, $componentWeight){
         $this->componentID = $componentID;
         $this->componentWeight = $componentWeight;
+        $this->componentName = $componentName;
     }
     public function pushSubComponent($name, $weight){
         $sub = new subComponent($name, $weight);
-        $this->subComponent = array_push($this->subComponent, $sub);
+        //$this->subComponent = array_push($this->subComponent, (object) $sub);
+        $this->subComponent[] = $sub;
     }
     public function getID(){return $this->componentID;}
     public function getWeight(){return $this->componentWeight;}
     public function getSub(){return $this->subComponent;}
+    public function getName(){return $this->componentName;}
 }
 
 

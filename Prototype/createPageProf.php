@@ -7,6 +7,7 @@ and open the template in the editor.
 <!DOCTYPE html>
 <?php
 include "classes/users.class.php";
+include "classes/module.class.php";
 
 session_start();
 $Details = "";
@@ -31,6 +32,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="css/footer.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -115,7 +117,21 @@ else{
             </form>';
         }
         else{
-            echo '<h1>Got Module</h1>';
+            $module = $Details->getMod();
+            echo "<table class='modTab'>
+                <tr>
+                    <th>Module Name</th>
+                    <th>Component</th>
+                    <th>Weight</th>
+                    <th>Sub-Component</th>
+                    <th>Weight</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+              </tr>
+              <tr>
+                  <td>". $module->getMod()."</td>
+              </tr>
+            </table>";
         }
         include "footer.php";
     ?>  

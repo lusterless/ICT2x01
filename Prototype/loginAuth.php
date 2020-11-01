@@ -38,25 +38,22 @@ else{
                     $mod = $row["module"];
                     $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
                     $modRow = $modResult->fetch_assoc();
-                    $modulee = new Module($modRow['module_id'], $modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+                    $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
                     //create component
                     $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
-                    $compRow = $compResult->fetch_assoc();
-                    foreach ($compRow as $cr){
-                        $modulee->pushComponent($cr['assessment_id'], $cr['assessment_weightage']);
+                    while($compRow = $compResult->fetch_assoc()){
+                        $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
                     }
                     //create subcomponent
                     foreach ($modulee->getAllComponent() as $c){
                         $assID = $c->getID();
                         $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
-                        $subCompRow = $subCompResult->fetch_assoc();
-                        foreach($subCompRow as $s){
-                            $c->pushSubComponent($s["subAssessment_name"], $c["subAssessment_weightage"]);
+                        while($subCompRow = $subCompResult->fetch_assoc()){
+                            $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
                         }
                     }
                     //store into session variables
                     $student->setMod($modulee);
-                    //get Comments here
                 }
                 session_start();
                 $_SESSION["sessionInfo"]= $student;
@@ -71,28 +68,25 @@ else{
                     $mod = $row["module"];
                     $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
                     $modRow = $modResult->fetch_assoc();
-                    $modulee = new Module($modRow['module_id'], $modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+                    $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
                     //create component
                     $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
-                    $compRow = $compResult->fetch_assoc();
-                    foreach ($compRow as $cr){
-                        $modulee->pushComponent($cr['assessment_id'], $cr['assessment_weightage']);
+                    while($compRow = $compResult->fetch_assoc()){
+                        $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
                     }
                     //create subcomponent
                     foreach ($modulee->getAllComponent() as $c){
                         $assID = $c->getID();
                         $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
-                        $subCompRow = $subCompResult->fetch_assoc();
-                        foreach($subCompRow as $s){
-                            $c->pushSubComponent($s["subAssessment_name"], $c["subAssessment_weightage"]);
+                        while($subCompRow = $subCompResult->fetch_assoc()){
+                            $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
                         }
                     }
                     //store into session variables
                     $professor->setMod($modulee);
                 }
                 
-                
-                
+
                 
                 session_start();
                 $_SESSION["sessionInfo"]=$professor;
