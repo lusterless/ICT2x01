@@ -5,6 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+include_once "sqlConnection.php";
 
 class loginControl{
     public static function filterStrings($data){
@@ -26,5 +27,25 @@ class loginControl{
         else{
             return true;
         }
+    }
+    
+    public static function getModuleInfo($conn,$mod){
+        $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
+        $modRow = $modResult->fetch_assoc();
+        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+        //create component
+        $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
+        while($compRow = $compResult->fetch_assoc()){
+            $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
+        }
+        //create subcomponent
+        foreach ($modulee->getAllComponent() as $c){
+            $assID = $c->getID();
+            $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
+            while($subCompRow = $subCompResult->fetch_assoc()){
+                $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
+            }
+        }
+        return $modulee;
     }
 }

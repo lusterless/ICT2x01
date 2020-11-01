@@ -131,7 +131,12 @@ else{
               <tr>
                   <td>". $module->getMod()."</td>
               </tr>
-            </table>";
+              <tr>";
+            foreach ($module->getAllComponent() as $f){
+                echo "<th>".$f->getName()."</th>";
+            }
+                    
+            echo "</tr></table>";
         }
         include "footer.php";
     ?>  

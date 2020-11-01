@@ -35,24 +35,8 @@ else{
                 //more extract
                 if($row["module"]!=""){
                     //create module
-                    $mod = $row["module"];
-                    $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
-                    $modRow = $modResult->fetch_assoc();
-                    $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
-                    //create component
-                    $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
-                    while($compRow = $compResult->fetch_assoc()){
-                        $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
-                    }
-                    //create subcomponent
-                    foreach ($modulee->getAllComponent() as $c){
-                        $assID = $c->getID();
-                        $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
-                        while($subCompRow = $subCompResult->fetch_assoc()){
-                            $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
-                        }
-                    }
                     //store into session variables
+                    $modulee = loginControl::getModuleInfo($conn,$row["module"]);
                     $student->setMod($modulee);
                 }
                 session_start();
@@ -64,25 +48,8 @@ else{
             else if ($row["role"] == "professor" && $status == true){
                 $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], $username);
                 if($row["module"]!=""){
-                    //create module
-                    $mod = $row["module"];
-                    $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
-                    $modRow = $modResult->fetch_assoc();
-                    $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
-                    //create component
-                    $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
-                    while($compRow = $compResult->fetch_assoc()){
-                        $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
-                    }
-                    //create subcomponent
-                    foreach ($modulee->getAllComponent() as $c){
-                        $assID = $c->getID();
-                        $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
-                        while($subCompRow = $subCompResult->fetch_assoc()){
-                            $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
-                        }
-                    }
                     //store into session variables
+                    $modulee = loginControl::getModuleInfo($conn,$row["module"]);
                     $professor->setMod($modulee);
                 }
                 
