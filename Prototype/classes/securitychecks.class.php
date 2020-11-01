@@ -14,7 +14,7 @@ class Security{
         return $data;
     }
     
-    public static function authenticateCredentials($conn, $user,$pass){
+    public static function authenticateCredentials($conn, $user){
         $sql = "SELECT * FROM users WHERE email='$user'";
         return $conn->query($sql);
     }

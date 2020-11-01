@@ -25,7 +25,7 @@ if ($conn->connect_error)
     header("Location:loginPage.php");
 }
 else{
-    $result = Security::authenticateCredentials($conn, $username, $password);
+    $result = Security::authenticateCredentials($conn, $username);
     if($result->num_rows > 0){
         $row = $result->fetch_assoc();
         $status = Security::checkAccountLocked($row);
