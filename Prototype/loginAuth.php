@@ -6,41 +6,70 @@ and open the template in the editor.
 -->
 <?php
 include_once "classes/users.class.php";
+include_once "classes/module.class.php";
+include_once "classes/feedbacks.class.php";
+include_once "classes/securitychecks.class.php";
 include_once "sqlConnection.php";
 
 //declare userCredentials Class
-$username = $_POST["username"];
-$password = $_POST["password"];
+$username = Security::filterStrings($_POST["username"]);
+$password = Security::filterStrings($_POST["password"]);
+$errormsg = "";
 
 if ($conn->connect_error)
 {
     session_start();
-    $_SESSION['dberror']=$conn->connect_error;
-    echo "<h1>".$_SESSION['dberror']."</h1>";
+    $errormsg .= $conn->connect_error;
+    session_start();
+    $_SESSION["errormsg"] = $errormsg;
+    header("Location:loginPage.php");
 }
 else{
-    $sql = "SELECT * FROM users WHERE email='$username' AND password='$password'";
-    $result = $conn->query($sql);
-    
+    $result = Security::authenticateCredentials($conn, $username, $password);
     if($result->num_rows > 0){
         $row = $result->fetch_assoc();
-        if($row["role"]=="student"){
-            $student = new students($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["module"], $username);
+        $status = Security::checkAccountLocked($row);
+        if($row["password"] == $password){
+            if($row["role"]=="student" && $status == true){
+            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], "", $username);
             //more extract
             session_start();
             $_SESSION["sessionInfo"]= $student;
+            //reset account counter
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
             header("Location:visualGame.php");
-        }
-        else{
-            $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["module"], $username);
+            }
+            else if ($row["role"] == "professor" && $status == true){
+                $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], "", $username);
+                session_start();
+                $_SESSION["sessionInfo"]=$professor;
+                $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+                header("Location:createPageProf.php");
+            }
+            else{
+                $errormsg .= "Account locked, Please contact your administrator";
+                session_start();
+                $_SESSION["errormsg"] = $errormsg;
+                header("Location:loginPage.php");
+            }
+        }else{
+            if($status == false){
+                $errormsg = "Account locked, Please contact your administrator";
+            }
+            else{
+                $count = $row["count"] += 1;
+                $conn->query("UPDATE users SET count='$count' WHERE email='$username'");
+                $errormsg = "Incorrect Password";
+            }
             session_start();
-            //get start end date
-            //add enrolled students
-            $_SESSION["sessionInfo"]=$professor;
-            header("Location:createPageProf.php");
+            $_SESSION["errormsg"] = $errormsg;
+            header("Location:loginPage.php");
         }
     }
     else{
+        $errormsg .= "Incorrect Username/Password";
+        session_start();
+        $_SESSION["errormsg"] = $errormsg;
         header("Location:loginPage.php");
     }
     $result->free_result();

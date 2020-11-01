@@ -40,6 +40,11 @@ else{
                     <button type="submit" class="loginBtn">Login</button>
                 </div>
             </form>
+            <?php
+                if(isset($_SESSION["errormsg"])){
+                    echo "<h3 style='color: red;'>".$_SESSION['errormsg']."</h3>";
+                }
+            ?>
         </div>
     </body>
 </html>

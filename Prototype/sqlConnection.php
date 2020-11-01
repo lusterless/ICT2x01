@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-define("DBHOST", "sql12.freemysqlhosting.net");
-define("DBNAME", "sql12372724");
-define("DBUSER", "sql12372724");
-define("DBPASS", "KgzyafLrPr");
+define("DBHOST", "localhost");
+define("DBNAME", "users");
+define("DBUSER", "root");
+define("DBPASS", "");
 
-$conn = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME, 3306);
+$conn = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
