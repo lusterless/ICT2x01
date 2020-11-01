@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Security{
+class loginControl{
     public static function filterStrings($data){
         $data = trim($data);
         $data = stripslashes($data);

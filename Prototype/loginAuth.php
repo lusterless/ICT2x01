@@ -8,12 +8,12 @@ and open the template in the editor.
 include_once "classes/users.class.php";
 include_once "classes/module.class.php";
 include_once "classes/feedbacks.class.php";
-include_once "classes/securitychecks.class.php";
+include_once "classes/login.control.php";
 include_once "sqlConnection.php";
 
 //declare userCredentials Class
-$username = Security::filterStrings($_POST["username"]);
-$password = Security::filterStrings($_POST["password"]);
+$username = loginControl::filterStrings($_POST["username"]);
+$password = loginControl::filterStrings($_POST["password"]);
 $errormsg = "";
 
 if ($conn->connect_error)
@@ -25,10 +25,10 @@ if ($conn->connect_error)
     header("Location:loginPage.php");
 }
 else{
-    $result = Security::authenticateCredentials($conn, $username);
+    $result = loginControl::authenticateCredentials($conn, $username);
     if($result->num_rows > 0){
         $row = $result->fetch_assoc();
-        $status = Security::checkAccountLocked($row);
+        $status = loginControl::checkAccountLocked($row);
         if($row["password"] == $password){
             if($row["role"]=="student" && $status == true){
             $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], "", $username);
