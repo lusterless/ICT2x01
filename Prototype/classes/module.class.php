@@ -38,9 +38,9 @@ class Module{
     public function getStart(){return $this->startDate;}
     public function getEnd(){return $this->endDate;}
     public function getAllComponent(){return $this->components;}
-    public function getComponent($number){return $this->components[$number];
+    //public function getComponent($number){return $this->components[$number];
     #eg; component[0]
-    }
+    //}
     public function getTotalEnroll(){return $this->totalEnrol;}
     public function getFormativeFeedbacks(){return $this->formativeFeedback;}
 }

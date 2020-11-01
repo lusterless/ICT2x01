@@ -31,16 +31,69 @@ else{
         $status = loginControl::checkAccountLocked($row);
         if($row["password"] == $password){
             if($row["role"]=="student" && $status == true){
-            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], "", $username);
-            //more extract
-            session_start();
-            $_SESSION["sessionInfo"]= $student;
-            //reset account counter
-            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-            header("Location:visualGame.php");
+                $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $username);
+                //more extract
+                if($row["module"]!=""){
+                    //create module
+                    $mod = $row["module"];
+                    $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
+                    $modRow = $modResult->fetch_assoc();
+                    $modulee = new Module($modRow['module_id'], $modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+                    //create component
+                    $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
+                    $compRow = $compResult->fetch_assoc();
+                    foreach ($compRow as $cr){
+                        $modulee->pushComponent($cr['assessment_id'], $cr['assessment_weightage']);
+                    }
+                    //create subcomponent
+                    foreach ($modulee->getAllComponent() as $c){
+                        $assID = $c->getID();
+                        $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
+                        $subCompRow = $subCompResult->fetch_assoc();
+                        foreach($subCompRow as $s){
+                            $c->pushSubComponent($s["subAssessment_name"], $c["subAssessment_weightage"]);
+                        }
+                    }
+                    //store into session variables
+                    $student->setMod($modulee);
+                    //get Comments here
+                }
+                session_start();
+                $_SESSION["sessionInfo"]= $student;
+                //reset account counter
+                $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+                header("Location:visualGame.php");
             }
             else if ($row["role"] == "professor" && $status == true){
-                $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], "", $username);
+                $professor = new Professor($row["tel"], $row["name"], $row["studentid"], $row["role"], $username);
+                if($row["module"]!=""){
+                    //create module
+                    $mod = $row["module"];
+                    $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
+                    $modRow = $modResult->fetch_assoc();
+                    $modulee = new Module($modRow['module_id'], $modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+                    //create component
+                    $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
+                    $compRow = $compResult->fetch_assoc();
+                    foreach ($compRow as $cr){
+                        $modulee->pushComponent($cr['assessment_id'], $cr['assessment_weightage']);
+                    }
+                    //create subcomponent
+                    foreach ($modulee->getAllComponent() as $c){
+                        $assID = $c->getID();
+                        $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
+                        $subCompRow = $subCompResult->fetch_assoc();
+                        foreach($subCompRow as $s){
+                            $c->pushSubComponent($s["subAssessment_name"], $c["subAssessment_weightage"]);
+                        }
+                    }
+                    //store into session variables
+                    $professor->setMod($modulee);
+                }
+                
+                
+                
+                
                 session_start();
                 $_SESSION["sessionInfo"]=$professor;
                 $conn->query("UPDATE users SET count='0' WHERE email='$username'");
