@@ -15,7 +15,7 @@ include "classes/feedbacks.class.php";
  * $tempComp = $module->getComponent(0)
  * $tempComp->pushSubComponent(Exam1, 20)
  * $tempComp->pushSubComponent(Exam2, 20)
- * ######Aggregation Code########
+ * ######Composition Code########
  * 
  *  */
 class Module{
