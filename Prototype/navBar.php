@@ -44,7 +44,8 @@
         echo "<p> Phone No.: ".$Details->getTel()."</p>";
         echo "<p> ACC Type: ".$Details->getRole()."</p>";
         echo "<p> Email: ".$Details->getEmail()."</p>";
-       // echo "<p>".$Details->getStudentInfo()->get_mod()."</p>";
+        if($Details->getMod() != "")
+            echo "<p> Currently Enrolled: ".$Details->getMod()->getMod()."</p>";
       ?>
     </div>
     <div class="modal-footer" style="text-align: center;">
