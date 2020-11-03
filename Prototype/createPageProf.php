@@ -132,8 +132,12 @@ else{
               <tr>";
             foreach ($module->getAllComponent() as $f){
                 echo "<th>".$f->getName()."</th>";
-            }
-                    
+                echo "<th>".$f->getWeight()."</th>";
+                foreach ($f->getSub() as $d){
+                    echo "<th>".$d->getName()."</th>";
+                    echo "<th>".$d->getWeight()."</th>";
+                }
+            }      
             echo "</tr></table>";
         }
         include "footer.php";

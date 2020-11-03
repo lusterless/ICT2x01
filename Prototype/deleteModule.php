@@ -30,15 +30,7 @@ if ($conn->connect_error)
     //insert error msg here
     header("Location:manageModule.php");
 }else{
-    $modID = $Details->getMod()->getNumber();
-    //delete module column from users
-    $conn->query("UPDATE users SET module=NULL WHERE module='$modID';");
-    //delete everything from module table
-    $conn->query("DELETE FROM Module WHERE module_id='$modID';");
-    //delete everything from assessments
-    $conn->query("DELETE FROM assessments WHERE module_id='$modID';");
-    //delete everything from subAssessments
-    $conn->query("DELETE FROM subAssessments WHERE module_id='$modID';"); 
+    deleteControl::clearAll($conn, $Details->getMod()->getNumber());
     //delete module from session
     $Details->setMod("");
     header("Location:createPageProf.php");
