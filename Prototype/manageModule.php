@@ -58,7 +58,7 @@ else{
   <script type='text/javascript'>
       function deleteMod(){
           if(confirm("Do you want to delete?")){
-              window.location="loginPage.php";
+              window.location="deleteModule.php";
           }
       }
   </script>

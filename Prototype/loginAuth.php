@@ -20,7 +20,6 @@ if ($conn->connect_error)
 {
     session_start();
     $errormsg .= $conn->connect_error;
-    session_start();
     $_SESSION["errormsg"] = $errormsg;
     header("Location:loginPage.php");
 }

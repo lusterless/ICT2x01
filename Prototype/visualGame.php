@@ -17,15 +17,18 @@ else{
     $Details = $_SESSION['sessionInfo'];
     if($Details->getRole() != "student"){
         header("Location:loginPage.php");
-    }
+    } 
+}    
+
+$module = $oldStartDate = $newStartDate = $oldEndDate = $newEndDate = "";
+
+if($Details->getMod() != ""){
+    $module = $Details->getMod();
+    $oldStartDate = explode('-',$module->getStart());
+    $newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
+    $oldEndDate = explode('-', $module->getEnd());
+    $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];   
 }
-
-$module = $Details->getMod();
-$oldStartDate = explode('-',$module->getStart());
-$newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
-$oldEndDate = explode('-', $module->getEnd());
-$newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];        
-
 ?>
 <html lang="en">
     <head>

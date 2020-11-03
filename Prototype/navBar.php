@@ -16,11 +16,11 @@
     <ul class="nav navbar-nav">
       <?php
         if($Details->getRole() == "professor"){
-            echo "<li class='active'><a href='createPageProf.php'>Dashboard</a></li>";
             if($Details->getMod() == ""){
                 echo "<li><a href='createPageProf.php'>New Module</a></li>";
             }
             else{
+                echo "<li><a href='createPageProf.php'>Dashboard</a></li>";
                 echo "<li><a href='manageModule.php'>Manage Module</a></li>";    
             }
       //<li><a href="#">Page 2</a></li>
