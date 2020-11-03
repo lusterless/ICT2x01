@@ -19,14 +19,15 @@ include "classes/feedbacks.class.php";
  * 
  *  */
 class Module{
-    private $modID, $startDate, $endDate, $totalEnrol;
+    private $modID, $startDate, $endDate, $totalEnrol, $modNo;
     private $formativeFeedback = [];
     private $components = [];
-    public function __construct($modID, $startDate, $endDate, $enrol) {
+    public function __construct($modID, $startDate, $endDate, $enrol, $modNo) {
         $this->modID = $modID;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->totalEnrol = $enrol;
+        $this->modNo = $modNo;
     }
     public function pushComponent($componentID, $componentName, $componentWeight){
         $comp = new Component($componentID, $componentName, $componentWeight);
@@ -38,6 +39,7 @@ class Module{
         //$this->formativeFeedback = array_push($this->formativeFeedback, (object) $fb);
         $this->formativeFeedback[] = $fb;
     }
+    public function getNumber(){return $this->modNo;}
     public function getMod(){return $this->modID;}
     public function getStart(){return $this->startDate;}
     public function getEnd(){return $this->endDate;}

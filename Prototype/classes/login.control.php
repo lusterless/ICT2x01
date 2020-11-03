@@ -32,7 +32,7 @@ class loginControl{
     public static function getModuleInfo($conn,$mod){
         $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
         $modRow = $modResult->fetch_assoc();
-        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0, $mod);
         //create component
         $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
         while($compRow = $compResult->fetch_assoc()){

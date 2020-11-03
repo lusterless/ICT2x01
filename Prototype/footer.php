@@ -8,7 +8,7 @@
 
 
 ?>
-
+<link rel="stylesheet" type="text/css" href="css/footer.css">
 <footer class="footer">
   <p>© 2013 - Singapore Institute of Technology</p>
 </footer>

@@ -30,8 +30,6 @@ else{
     <title>Create a module</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/footer.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -129,7 +127,7 @@ else{
                     <th>End Date</th>
               </tr>
               <tr>
-                  <td>". $module->getStart()."</td>
+                  <td>". $module->getNumber()."</td>
               </tr>
               <tr>";
             foreach ($module->getAllComponent() as $f){

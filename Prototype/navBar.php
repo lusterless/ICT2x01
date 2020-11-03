@@ -7,16 +7,30 @@
 ?>
 
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">   
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#"> Singapore Institute of Technology</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Dashboard</a></li>
-      <!--<li><a href="#">Dashboard</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>-->
+      <?php
+        if($Details->getRole() == "professor"){
+            echo "<li class='active'><a href='createPageProf.php'>Dashboard</a></li>";
+            if($Details->getMod() == ""){
+                echo "<li><a href='createPageProf.php'>New Module</a></li>";
+            }
+            else{
+                echo "<li><a href='manageModule.php'>Manage Module</a></li>";    
+            }
+      //<li><a href="#">Page 2</a></li>
+      //<li><a href="#">Page 3</a></li>"     
+        }
+        else{
+            echo "<li class='active'><a href='visualGame.php'>Dashboard</a></li>";
+        }
+      ?>
+
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
