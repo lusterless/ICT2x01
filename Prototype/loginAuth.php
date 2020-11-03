@@ -54,7 +54,6 @@ else{
                 }
                 
 
-                
                 session_start();
                 $_SESSION["sessionInfo"]=$professor;
                 $conn->query("UPDATE users SET count='0' WHERE email='$username'");

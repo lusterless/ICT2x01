@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 
-
-
+statusModalOpen = false;
 
 //current Date for tracking
 var n =  new Date(); //current date
@@ -14,8 +13,10 @@ m = n.getMonth() + 1;
 d = n.getDate();
 
 //Temporary generate date MM-DD-YYYY
-var x = new Date('9/04/2020');  //start module date
-var y = new Date('12/25/2020');  //end module date
+var x = new Date(startDate);  //start module date
+var y = new Date(endDate);  //end module date
+//var x = new Date(module.getStart());
+//var y = new Date(module.getEnd());
 const diffTime = Math.abs(y - x);
 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 //calculate difference = how many pixels
@@ -24,8 +25,6 @@ var portion = Math.floor(820 / diffDays);
 //calculate number of days from original start date of module: current date - start date
 const timediff = Math.abs(n - x);
 const daysdiff = Math.ceil(timediff / (1000 * 60 * 60 * 24));
-
-
 
 
 //DECLARATIoN
@@ -48,13 +47,20 @@ let canvas = document.querySelector('canvas');
 let ctx = canvas.getContext('2d');
 var c = document.getElementById("interactiveCanvas");
 var elements = [] //All elements in canvas
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("summativeModal");
+var fmodal = document.getElementById("formativeModal");
 
 
 //span function close modal
 var span = document.getElementsByClassName("close")[1];
+var span1 = document.getElementsByClassName("close")[2];
 span.onclick = function() {
-    modal.style.display = "none";
+    modal.style.display = "none";  
+    statusModalOpen = false;
+ }
+span1.onclick = function() {
+    fmodal.style.display = "none";   
+    statusModalOpen = false;
  }
 
 canvas.addEventListener('click', function(e) {
@@ -63,7 +69,10 @@ canvas.addEventListener('click', function(e) {
 
     elements.forEach(function(element){
         if((x <= element.x + element.sizex) && (x >= element.x) && (y >= element.y) && y <= element.y + element.sizey){
-            element.clicked();
+            if(statusModalOpen == false){
+                element.clicked();
+                statusModalOpen = true;
+            }
         }
     }); 
 });
@@ -86,7 +95,7 @@ function treasureinit() {
         sizex: 80,
         sizey: 60,
         clicked: function(){
-            showFormative();
+            showSummative();
         }
     })
 }
@@ -129,8 +138,12 @@ function dinoinit() {
   }
 }
 
-function showFormative(){
+function showSummative(){
     modal.style.display = "block";
+}
+
+function showFormative(){
+    fmodal.style.display = "block";
 }
 
 

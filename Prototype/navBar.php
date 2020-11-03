@@ -39,16 +39,16 @@
     </div>
     <div class="modal-body">
       <?php
-        echo "<p>".$Details->getName()."</p>";
-        echo "<p>".$Details->getUser()."</p>";
-        echo "<p>".$Details->getTel()."</p>";
-        echo "<p>".$Details->getRole()."</p>";
-        echo "<p>".$Details->getEmail()."</p>";
+        echo "<p> Name: ".$Details->getName()."</p>";
+        echo "<p> Identity No.: ".$Details->getUser()."</p>";
+        echo "<p> Phone No.: ".$Details->getTel()."</p>";
+        echo "<p> ACC Type: ".$Details->getRole()."</p>";
+        echo "<p> Email: ".$Details->getEmail()."</p>";
        // echo "<p>".$Details->getStudentInfo()->get_mod()."</p>";
       ?>
     </div>
-    <div class="modal-footer">
-      <h3>Modal Footer</h3>
+    <div class="modal-footer" style="text-align: center;">
+      <p>© 2013 - Singapore Institute of Technology</p>
     </div>
   </div>
 </div>

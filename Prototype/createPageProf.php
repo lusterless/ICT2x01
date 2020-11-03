@@ -36,7 +36,6 @@ else{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <?php
@@ -109,26 +108,12 @@ else{
                 </div>
               </div>
               <!-- Confirmation -->
-      <div v-if="step === 4">
-        <div>
-            <h1>Confirmation page</h1>
-            <br>
-            <h5>Module Name: {{ module }}</h5>
-            <h5>Module Start Date: {{ startdate }}</h5>
-            <h5>Module End Date: {{ enddate }}</h5>
-        <div v-for="(assessment, index) in assessments">
-          <div>
-            <h5>Assessment {{ index + 1 }} : {{ assessment.category }}</h5>
-            <h5>Assessment {{ index + 1 }} Weightage : {{ assessment.weightage}}</h5>
-            <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
-                <h5>Sub Assessment {{ subIndex + 1 }} : {{ subAssessment.name }} : {{ subAssessment.weightage }}</h5>
-            </div>
-          </div>
-        </div>
-          <button type="button" @click="prevStep">Go Back</button>
-          <button type="button" @click="addModule();">Confirm</button>
-        </div>
-      </div>
+              <div v-if="step === 4">
+                <div>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
             </form>';
         }
         else{
@@ -144,7 +129,7 @@ else{
                     <th>End Date</th>
               </tr>
               <tr>
-                  <td>". $module->getMod()."</td>
+                  <td>". $module->getStart()."</td>
               </tr>
               <tr>";
             foreach ($module->getAllComponent() as $f){

@@ -6,6 +6,7 @@ and open the template in the editor.
 -->
 <?php
 include "classes/users.class.php";
+include "classes/module.class.php";
 
 session_start();
 $Details = "";
@@ -18,6 +19,13 @@ else{
         header("Location:loginPage.php");
     }
 }
+
+$module = $Details->getMod();
+$oldStartDate = explode('-',$module->getStart());
+$newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
+$oldEndDate = explode('-', $module->getEnd());
+$newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];        
+
 ?>
 <html lang="en">
     <head>
@@ -44,7 +52,7 @@ else{
             include "footer.php";
         ?>
         <!-- The Modal -->
-        <div id="myModal" class="modal" style="width:600px; height: 600px; margin: auto;">
+        <div id="summativeModal" class="modal" style="width:600px; height: 600px; margin: auto;">
             <div class="modal-content">
                 <div class="modal-header">
                   <span class="close">&times;</span>
@@ -57,6 +65,27 @@ else{
                   <h3>Modal Footer</h3>
                 </div>
             </div>
+        </div>
+        <div id="formativeModal" class="modal" style="width:600px; height: 600px; margin: auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <span class="close">&times;</span>
+                  <h2>Comments <span class="glyphicon glyphicon-user"></span> </h2>
+                </div>
+                <div class="modal-body">
+                  Test
+                </div>
+                <div class="modal-footer">
+                  <h3>Modal Footer</h3>
+                </div>
+            </div>
+        </div>
     </body>
-    <script src="js/visualGame.js" type="text/javascript"></script>
+    <script type="text/javascript"> 
+        startDate = <?php echo json_encode($newStartDate); ?>;
+        endDate = <?php echo json_encode($newEndDate); ?>;
+    </script>
+    <script src="js/visualGame.js" type="text/javascript">
+    
+    </script>
 </html>

@@ -10,5 +10,5 @@
 ?>
 
 <footer class="footer">
-  <p>© 2013 - Organisation</p>
+  <p>© 2013 - Singapore Institute of Technology</p>
 </footer>
