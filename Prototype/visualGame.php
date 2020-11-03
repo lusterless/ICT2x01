@@ -85,7 +85,5 @@ $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];
         startDate = <?php echo json_encode($newStartDate); ?>;
         endDate = <?php echo json_encode($newEndDate); ?>;
     </script>
-    <script src="js/visualGame.js" type="text/javascript">
-    
-    </script>
+    <script src="js/visualGame.js" type="text/javascript"> </script>
 </html>
