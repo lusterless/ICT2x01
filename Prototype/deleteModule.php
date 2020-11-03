@@ -31,7 +31,7 @@ if ($conn->connect_error)
     header("Location:manageModule.php");
 }else{
     deleteControl::clearAll($conn, $Details->getMod()->getNumber());
-    //delete module from session
+    //delete module from session = delete components = delete subcomponents
     $Details->setMod("");
     header("Location:createPageProf.php");
 }
