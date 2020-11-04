@@ -32,9 +32,7 @@ else{
             $Details->setMod("");
             header("Location:createPageProf.php");
         }
+
     }
 }
-
-
-
 ?>

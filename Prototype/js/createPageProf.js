@@ -45,6 +45,41 @@ var app = new Vue({
         this.$set(this, "step", this.step - 1);
       }
     },
+        addModule: function(){
+        if(this.module !== '' && this.startdate !== '' && this.enddate !== ''){
+            axios.post('ajaxfile.php', {
+            request: 1,
+            module: this.module,
+            startdate: this.startdate,
+            enddate: this.enddate,
+            assessment: this.assessments
+            })
+        for(i=0;i < this.assessments.length;i++){
+            axios.post('ajaxfile.php', {
+            request: 2,
+            assessmentid: i + 1,
+            category: this.assessments[i].category,
+            assessmentweightage: this.assessments[i].weightage
+            
+
+            })
+        }
+        for(i=0;i < this.assessments.length;i++){
+            for(j=0;j<this.assessments[i].subAssessments.length;j++){
+                    axios.post('ajaxfile.php', {
+                    request: 3,
+                    assessmentid: i + 1,
+                    subassessmentname: this.assessments[i].subAssessments[j].name,
+                    subassessmentweightage: this.assessments[i].subAssessments[j].weightage        
+                }) 
+            }
+        }
+        } else{
+            alert('Fill all fields.');
+        }
+   
+    },
+    
     addError(newError) {
       this.errors.filter((err) => err === newError).length === 0
         ? this.errors.push(newError)

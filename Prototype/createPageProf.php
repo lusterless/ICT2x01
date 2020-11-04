@@ -116,28 +116,26 @@ else{
         }
         else{
             $module = $Details->getMod();
-            echo "<table class='modTab'>
+            echo "
+                <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
+                <table class='modTab'>
                 <tr>
-                    <th>Module Name</th>
                     <th>Component</th>
-                    <th>Weight</th>
                     <th>Sub-Component</th>
                     <th>Weight</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-              </tr>
-              <tr>
-                  <td>". $module->getNumber()."</td>
-              </tr>
-              <tr>";
+              </tr>";
+              
+              
             foreach ($module->getAllComponent() as $f){
-                echo "<th>".$f->getName()."</th>";
-                echo "<th>".$f->getWeight()."</th>";
-                foreach ($f->getSub() as $d){
-                    echo "<th>".$d->getName()."</th>";
-                    echo "<th>".$d->getWeight()."</th>";
+                foreach($f -> getSub() as $g){
+                    echo "<tr>";
+                    echo "<td>".$f->getName()."</th>";
+                    echo "<td>".$g->getName()."</th>";
+                    echo "<td>".$g->getWeight()."</th>";
+                    echo "</tr>";
                 }
-            }      
+            }
+            echo "</td>";         
             echo "</tr></table>";
         }
         include "footer.php";
