@@ -20,19 +20,21 @@ else{
     $Details = $_SESSION['sessionInfo'];
     if($Details->getRole() != "professor" || $Details->getMod() == ""){
         header("Location:loginPage.php");
+    }else{
+        if ($conn->connect_error)
+        {
+            session_start();   
+            //insert error msg here
+            header("Location:manageModule.php");
+        }else{
+            deleteFactory::clearAll($conn, $Details->getMod()->getNumber());
+            //delete module from session = delete components = delete subcomponents
+            $Details->setMod("");
+            header("Location:createPageProf.php");
+        }
     }
 }
 
 
-if ($conn->connect_error)
-{
-    session_start();   
-    //insert error msg here
-    header("Location:manageModule.php");
-}else{
-    deleteFactory::clearAll($conn, $Details->getMod()->getNumber());
-    //delete module from session = delete components = delete subcomponents
-    $Details->setMod("");
-    header("Location:createPageProf.php");
-}
+
 ?>
