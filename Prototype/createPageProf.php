@@ -152,13 +152,8 @@ else{
                     echo "<th>".$d->getName()."</th>";
                     echo "<th>".$d->getWeight()."</th>";
                 }
-<<<<<<< HEAD
-            }      
-=======
             }
             echo "</td>";
-                    
->>>>>>> parent of 0001450... Merge branch 'main' into haha
             echo "</tr></table>";
         }
         include "footer.php";
