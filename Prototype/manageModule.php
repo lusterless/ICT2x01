@@ -41,16 +41,22 @@ else{
       <div class="container" id="widgetContainer">
         <div class="row">
             <a href="#">
-                <div class="manageWidget">Import Students</div>
+                <div class="manageWidget">
+                    <img src="images/mountain1.jpg" alt="summative Feedback">
+                    <div class="comments">Add Summative Feedback</div>
+                </div>
+            </a>
+            <a href="#">
+                <div class="manageWidget">
+                    <img src="images/mountain2.jpg" alt="formative feedback">
+                    <div class="comments">Add Formative Feedback</div>
+                </div>
             </a>
             <a href="#" onclick="return deleteMod()">
-                <div class="manageWidget">Delete Module</div>
-            </a>
-            <a href="#">
-                <div class="manageWidget">Add Summative Feedback</div>
-            </a>
-            <a href="#">
-                <div class="manageWidget">Add Formative Feedback</div>
+                <div class="manageWidget">
+                    <img src="images/mountain3.jpg" alt="delete mod">
+                    <div class="comments">Delete Module</div>
+                </div>
             </a>
         </div>
       </div>
