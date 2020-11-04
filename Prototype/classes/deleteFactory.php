@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class deleteControl{
+class deleteFactory{
     public static function clearAll($conn, $modID){
         $conn->query("UPDATE users SET module=NULL, formative_Feedback=NULL WHERE module='$modID';");
         //delete everything from module table
