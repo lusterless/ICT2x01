@@ -8,7 +8,7 @@
 
 include "classes/users.class.php";
 include "classes/module.class.php";
-include "classes/delete.control.php";
+include "classes/deleteFactory.php";
 include_once "sqlConnection.php";
 
 session_start();
@@ -30,7 +30,7 @@ if ($conn->connect_error)
     //insert error msg here
     header("Location:manageModule.php");
 }else{
-    deleteControl::clearAll($conn, $Details->getMod()->getNumber());
+    deleteFactory::clearAll($conn, $Details->getMod()->getNumber());
     //delete module from session = delete components = delete subcomponents
     $Details->setMod("");
     header("Location:createPageProf.php");

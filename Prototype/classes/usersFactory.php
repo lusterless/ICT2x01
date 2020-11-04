@@ -5,9 +5,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-include_once "sqlConnection.php";
 
-class loginControl{
+class usersFactory{
+    public static function createUser($role, $row, $conn){
+        $username = $row["email"];
+        if($role == "professor"){
+            $prof = new professor($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $prof->setMod($modulee);
+            }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $prof;
+        }else{
+            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);    
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $student->setMod($modulee);
+            }
+            //reset account counter
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $student;            
+        }
+    }
+    
     public static function filterStrings($data){
         $data = trim($data);
         $data = stripslashes($data);
