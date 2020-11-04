@@ -45,26 +45,7 @@ var app = new Vue({
         this.$set(this, "step", this.step - 1);
       }
     },
-    addError(newError) {
-      this.errors.filter((err) => err === newError).length === 0
-        ? this.errors.push(newError)
-        : null;
-    },
-    addAssessment() {
-      if (this.assessments.length < this.categories.length) {
-        this.assessments.push({
-          category: "",
-          weightage: 0,
-          subAssessments: [{ name: "", weightage: 0 }],
-        });
-      }
-    },
-    removeAssessment(index) {
-      if (this.assessments.length > 1) {
-        this.assessments.splice(index, 1);
-      }
-    },
-    addModule: function(){
+        addModule: function(){
         if(this.module !== '' && this.startdate !== '' && this.enddate !== ''){
             axios.post('ajaxfile.php', {
             request: 1,
@@ -97,6 +78,26 @@ var app = new Vue({
             alert('Fill all fields.');
         }
    
+    },
+    
+    addError(newError) {
+      this.errors.filter((err) => err === newError).length === 0
+        ? this.errors.push(newError)
+        : null;
+    },
+    addAssessment() {
+      if (this.assessments.length < this.categories.length) {
+        this.assessments.push({
+          category: "",
+          weightage: 0,
+          subAssessments: [{ name: "", weightage: 0 }],
+        });
+      }
+    },
+    removeAssessment(index) {
+      if (this.assessments.length > 1) {
+        this.assessments.splice(index, 1);
+      }
     },
     addSubAssessment(index, subIndex) {
       this.assessments[index].subAssessments.splice(subIndex + 1, 0, {

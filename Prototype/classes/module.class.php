@@ -19,14 +19,15 @@ include "classes/feedbacks.class.php";
  * 
  *  */
 class Module{
-    private $modID, $startDate, $endDate, $totalEnrol;
+    private $modID, $startDate, $endDate, $totalEnrol, $modNo;
     private $formativeFeedback = [];
     private $components = [];
-    public function __construct($modID, $startDate, $endDate, $enrol) {
+    public function __construct($modID, $startDate, $endDate, $enrol, $modNo) {
         $this->modID = $modID;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->totalEnrol = $enrol;
+        $this->modNo = $modNo;
     }
     public function pushComponent($componentID, $componentName, $componentWeight){
         $comp = new Component($componentID, $componentName, $componentWeight);
@@ -38,6 +39,7 @@ class Module{
         //$this->formativeFeedback = array_push($this->formativeFeedback, (object) $fb);
         $this->formativeFeedback[] = $fb;
     }
+    public function getNumber(){return $this->modNo;}
     public function getMod(){return $this->modID;}
     public function getStart(){return $this->startDate;}
     public function getEnd(){return $this->endDate;}
@@ -71,16 +73,16 @@ class Component{
 
 
 class subComponent{
-    private $subComponentName, $subComponentWeightage, $summativeFeedback;
+    private $subComponentName, $subComponentWeight, $summativeFeedback;
     public function __construct($name, $weight){
         $this->subComponentName = $name;
-        $this->subCompoenntWeightage = $weight;
+        $this->subComponentWeight = $weight;
     }
     public function giveSummativeFeedback($score,$fb){
         #summativeFeedbacks unlikes formativefeedback is not an array because each subcomponent only have 1 feedback,
         # but each component can have 4 subcomponents which will have up to 4 comments
         $this->summativeFeedback = new summativeFeedbacks($score,$fb);
     }
-    public function getName(){return $subComponentName;}
-    public function getWeight(){return $subComponentWeight;}
+    public function getName(){return $this->subComponentName;}
+    public function getWeight(){return $this->subComponentWeight;}
 }

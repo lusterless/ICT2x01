@@ -5,9 +5,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-include_once "sqlConnection.php";
 
-class loginControl{
+class usersFactory{
+    public static function createUser($role, $row, $conn){
+        $username = $row["email"];
+        if($role == "professor"){
+            $prof = new professor($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $prof->setMod($modulee);
+            }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $prof;
+        }else{
+            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);    
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $student->setMod($modulee);
+            }
+            //reset account counter
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $student;            
+        }
+    }
+    
     public static function filterStrings($data){
         $data = trim($data);
         $data = stripslashes($data);
@@ -32,7 +55,7 @@ class loginControl{
     public static function getModuleInfo($conn,$mod){
         $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
         $modRow = $modResult->fetch_assoc();
-        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0);
+        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0, $mod);
         //create component
         $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
         while($compRow = $compResult->fetch_assoc()){

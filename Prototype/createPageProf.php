@@ -30,13 +30,10 @@ else{
     <title>Create a module</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/footer.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <?php
@@ -133,23 +130,26 @@ else{
         }
         else{
             $module = $Details->getMod();
-            echo "<table class='modTab'>
+            echo "
+                <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
+                <table class='modTab'>
                 <tr>
-                    <th>Module Name</th>
                     <th>Component</th>
-                    <th>Weight</th>
                     <th>Sub-Component</th>
                     <th>Weight</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-              </tr>
-              <tr>
-                  <td>". $module->getMod()."</td>
-              </tr>
-              <tr>";
+              </tr>";
+              
+              
             foreach ($module->getAllComponent() as $f){
-                echo "<th>".$f->getName()."</th>";
+                foreach($f -> getSub() as $g){
+                    echo "<tr>";
+                    echo "<td>".$f->getName()."</th>";
+                    echo "<td>".$g->getName()."</th>";
+                    echo "<td>".$g->getWeight()."</th>";
+                    echo "</tr>";
+                }
             }
+            echo "</td>";
                     
             echo "</tr></table>";
         }
