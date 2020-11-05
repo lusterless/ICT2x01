@@ -29,8 +29,8 @@ else{
         }else{
             deleteFactory::clearAll($conn, $Details->getMod()->getNumber());
             //delete module from session = delete components = delete subcomponents
-            $name= $Details->getName();
-            mysqli_query($conn,"UPDATE users SET module='' WHERE name='".$name."'");
+            //$name= $Details->getName();
+            //mysqli_query($conn,"UPDATE users SET module='' WHERE name='".$name."'");
             $Details->setMod("");
             header("Location:createPageProf.php");
         }
