@@ -31,10 +31,8 @@ else{
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <?php
@@ -42,7 +40,7 @@ else{
     
         if($Details->getMod() == "")
         {
-            echo '<form id="app" class="container" action="" method="post" @submit="submit">
+           echo '<form id="app" class="container" action="success.php" method="post" @submit="submit">
               <!-- Error Banner -->
               <p v-if="errors.length">
                 <b>Please correct the following error(s):</b>
@@ -107,38 +105,62 @@ else{
                 </div>
               </div>
               <!-- Confirmation -->
-              <div v-if="step === 4">
-                <div>
-                  <button type="button" @click="prevStep">Go Back</button>
-                  <button type="button" @click="nextStep">Next</button>
-                </div>
-              </div>
-            </form>';
-        }
-        else{
-            $module = $Details->getMod();
-            echo "
-                <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
-                <table class='modTab'>
-                <tr>
-                    <th>Component</th>
-                    <th>Sub-Component</th>
-                    <th>Weight</th>
-              </tr>";
-              
-              
-            foreach ($module->getAllComponent() as $f){
-                foreach($f -> getSub() as $g){
-                    echo "<tr>";
-                    echo "<td>".$f->getName()."</th>";
-                    echo "<td>".$g->getName()."</th>";
-                    echo "<td>".$g->getWeight()."</th>";
-                    echo "</tr>";
-                }
+      <div v-if="step === 4">
+        <div>
+            <h1>Confirmation page</h1>
+            <br>
+            <h5>Module Name: {{ module }}</h5>
+            <h5>Module Start Date: {{ startdate }}</h5>
+            <h5>Module End Date: {{ enddate }}</h5>
+        <div v-for="(assessment, index) in assessments">
+          <div>
+            <h5>Assessment {{ index + 1 }} : {{ assessment.category }}</h5>
+            <h5>Assessment {{ index + 1 }} Weightage : {{ assessment.weightage}}</h5>
+            <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
+                <h5>Sub Assessment {{ subIndex + 1 }} : {{ subAssessment.name }} : {{ subAssessment.weightage }}</h5>
+            </div>
+          </div>
+        </div>
+          <button type="button" @click="prevStep">Go Back</button>
+          <button type="button" @click="nextStep();addModule();">Confirm</button>';
+            if($Details->getMod() != ""){
+             
+                header("Location:createPageProf.php");
             }
-            echo "</td>";         
-            echo "</tr></table>";
-        }
+        echo '</div>';
+        
+      echo ' </div>';
+                    echo '<div v-if="step === 5">
+                <div>
+                <h2>Success</h2>';
+                  echo '<button type="submit">Back to dashboard</button>
+                </div>
+              </div>';
+      
+            echo '</form>';
+        }else{
+             $module = $Details->getMod();
+             echo "
+                 <div class='container' id='widgetC'>
+                 <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
+                 <table style='width: 100%;' class='modTab'>
+                 <tr>
+                     <th>Component</th>
+                     <th>Sub-Component</th>
+                     <th>Weight</th>
+               </tr>";
+             foreach ($module->getAllComponent() as $f){
+                 foreach($f -> getSub() as $g){
+                     echo "<tr>";
+                     echo "<td>".$f->getName()."</th>";
+                     echo "<td>".$g->getName()."</th>";
+                     echo "<td>".$g->getWeight()."</th>";
+                     echo "</tr>";
+                 }
+             }
+             echo "</td>";
+             echo "</tr></table></div>";
+         }
         include "footer.php";
     ?>  
     <script src="js/createPageProf.js"></script>

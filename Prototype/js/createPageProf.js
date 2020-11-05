@@ -74,6 +74,8 @@ var app = new Vue({
                 }) 
             }
         }
+        //location.reload();
+        //return false;
         } else{
             alert('Fill all fields.');
         }

@@ -25,3 +25,10 @@ and open the template in the editor.
 .modTab tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+#widgetC{
+    border-radius: 25px;  
+    width: 50%;
+    padding: 30px 70px 70px 70px;
+    background-color: #f6f7f8;
+}
