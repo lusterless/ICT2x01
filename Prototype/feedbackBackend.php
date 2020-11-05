@@ -19,23 +19,24 @@ else{
     if($Details->getRole() != "professor" || $Details->getMod() == ""){
         header("Location:loginPage.php");
     }
-}
-
-$id = $_POST["studID"];
-$feedback = $_POST["feedback"];
-if(isset($_POST["sub"])){
-    $subAss = $_POST["sub"];
-    $score = $_POST["subScore"];
-}
-
-if (!$conn->connect_error)
-{
+    $id = $_POST["studID"];
+    $feedback = $_POST["feedback"];
     if(isset($_POST["sub"])){
-        feedbackFactory::addSummative($conn, $id, $feedback, $subAss, $score);
-    }else{    
-        feedbackFactory::addFormative($conn, $id, $feedback);
+        $subAss = $_POST["sub"];
+        $score = $_POST["score"];
+    }
+
+    if (!$conn->connect_error)
+    {
+        if(isset($_POST["sub"])){
+            feedbackFactory::addSummative($conn, $id, $feedback, $subAss, $score);
+        }else{    
+            feedbackFactory::addFormative($conn, $id, $feedback);
+        }
     }
 }
+
+
 
 
 

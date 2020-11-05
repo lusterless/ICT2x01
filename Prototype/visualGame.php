@@ -36,8 +36,6 @@ if($Details->getMod() != ""){
         <link rel="stylesheet" type="text/css" href="css/userGame.css"> 
         <link rel="stylesheet" type="text/css" href="css/moduleTable.css">     
         <link rel="stylesheet" type="text/css" href="css/manageModule.css">          
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>  
         <title></title>
     </head>
     <body id="gameBody">

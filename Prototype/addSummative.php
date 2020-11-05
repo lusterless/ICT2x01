@@ -15,42 +15,7 @@ else{
         header("Location:loginPage.php");
     }
 }
-// Define variables and initialize with empty values
-$subComponent = $subScore = $subFeedback = "";
-$subComponent_err = $subScore_err = $subFeedback_err = "";
- 
-// Processing form data when form is submitted
-if(isset($_POST["add"]) && !empty($_POST["add"])){ //this is needed to check based on the update at the bottom of the form
-    // Get hidden input value
-    $nameID = $_POST["update"];
-    
-    // Validate name
-    $input_subName = trim($_POST["subComponent"]);
-    if(empty($input_subName)){
-        $subComponent_err = "Please enter a Component Name.";
-    } else{
-        $subComponent = $input_subName;
-    }
-    
-    // Validate address address
-    $input_subScore = trim($_POST["subScore"]);
-    if(empty($input_subScore)){
-        $subScore_err = "Please enter a value.";     
-    }elseif(!ctype_digit($input_subScore)){
-        $subFeedback_err = "Please enter a positive integer value.";
-    }
-    else{
-        $subScore = $input_subScore;
-    }
-    
-    // Validate salary
-    $input_feedback = trim($_POST["subFeedback"]);
-    if(empty($input_feedback)){
-        $subFeedback_err = "Please enter Feedback.";     
-    } else{
-        $subFeedback = $input_feedback;
-    }
-}
+
 $module = $Details->getMod();
 ?>
  
@@ -59,13 +24,8 @@ $module = $Details->getMod();
 <head>
     <meta charset="UTF-8">
     <title>Update Record</title>
+    <link rel="stylesheet" href="css/feedbacks.css">    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <style type="text/css">
-        .wrapper{
-            width: 500px;
-            margin: 0 auto;
-        }
-    </style>
 </head>
     <?php include('navBar.php');?>
     <div class="wrapper">
@@ -75,12 +35,12 @@ $module = $Details->getMod();
                     <div class="page-header">
                         <h2>Add Summative Feedback</h2>
                     </div>
-                   
+                    <p>Please edit the input values and submit to update the record.</p>
                     <form action="formativeBackend.php" method="post">
-                        <div class="form-group <?php echo (!empty($subComponent_err)) ? 'has-error' : ''; ?>">
-                            <label>Sub Component Name</label>
+                        <div class="form-group">
+                            <label>Subject</label>
                             <?php
-                            echo "<select id='sub' name='sub'>";
+                            echo "<select class='form-control' name='sub' required>";
                             foreach($module->getAllComponent() as $f){
                                 foreach($f->getSub() as $g){
                                     echo "<option value='".$g->getName()."'>".$g->getName()."</option>";
@@ -88,21 +48,17 @@ $module = $Details->getMod();
                             }
                             echo "</select>";
                             ?>
-                            <span class="help-block"><?php echo $subComponent_err;?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($subScore_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Score</label>
-                            <textarea name="subScore" class="form-control"><?php echo $subScore; ?></textarea>
-                            <span class="help-block"><?php echo $subScore_err;?></span>
+                            <input type="number" name="score" class="form-control" required>
                         </div>
-                        <div class="form-group <?php echo (!empty($subFeedback_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Feedback</label>
-                            <input type="text" name="feedback" class="form-control" value="<?php echo $subFeedback; ?>">
-                            <span class="help-block"><?php echo $subFeedback_err;?></span>
+                            <textarea name="feedback" class="form-control" required></textarea>
                         </div>
                         <div class="form-group">
                         </div>
-                        <input type="hidden" name="add" value="<?php echo $subComponent; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>
