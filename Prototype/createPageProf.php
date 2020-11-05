@@ -40,7 +40,7 @@ else{
     
         if($Details->getMod() == "")
         {
-            echo '<form id="app" class="container" action="" method="post" @submit="submit">
+           echo '<form id="app" class="container" action="success.php" method="post" @submit="submit">
               <!-- Error Banner -->
               <p v-if="errors.length">
                 <b>Please correct the following error(s):</b>
@@ -122,10 +122,22 @@ else{
           </div>
         </div>
           <button type="button" @click="prevStep">Go Back</button>
-          <button type="button" @click="addModule();">Confirm</button>
-        </div>
-      </div>
-            </form>';
+          <button type="button" @click="nextStep();addModule();">Confirm</button>';
+            if($Details->getMod() != ""){
+             
+                header("Location:createPageProf.php");
+            }
+        echo '</div>';
+        
+      echo ' </div>';
+                    echo '<div v-if="step === 5">
+                <div>
+                <h2>Success</h2>';
+                  echo '<button type="submit">Back to dashboard</button>
+                </div>
+              </div>';
+      
+            echo '</form>';
         }else{
              $module = $Details->getMod();
              echo "
