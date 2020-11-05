@@ -1,7 +1,7 @@
 <?php
 // Include config file
 include "sqlConnection.php";
- include "classes/users.class.php";
+include "classes/users.class.php";
 include "classes/module.class.php";
 
 session_start();
@@ -51,6 +51,8 @@ if(isset($_POST["update"]) && !empty($_POST["update"])){
         }
     }
 }
+
+$module = $Details->getMod();
 ?>
  
 <!DOCTYPE html>
@@ -66,7 +68,7 @@ if(isset($_POST["update"]) && !empty($_POST["update"])){
         }
     </style>
 </head>
-    <?php include('navBar.php');?>
+    <?php include 'navBar.php';?>
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -75,15 +77,15 @@ if(isset($_POST["update"]) && !empty($_POST["update"])){
                         <h2>Update Record</h2>
                     </div>
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="formativeBackEnd" method="post">
                         <div class="form-group <?php echo (!empty($studID_err)) ? 'has-error' : ''; ?>">
                             <label>Name</label>
-                            <input type="text" name="studID" class="form-control" value="<?php echo $studID; ?>" readonly>
+                            <input type="text" name="studID" class="form-control" value="<?php echo $studID;?>" readonly>
                             <span class="help-block"><?php echo $studID_err;?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($formativeFB_err)) ? 'has-error' : ''; ?>">
                             <label>Feedback</label>
-                            <textarea name="formativeFB" class="form-control"><?php echo $formativeFB; ?></textarea>
+                            <textarea name="feedback" class="form-control"><?php echo $formativeFB; ?></textarea>
                             <span class="help-block"><?php echo $formativeFB_err;?></span>
                         </div>
                         <input type="hidden" name="update" value="<?php echo $studID; ?>"/>
@@ -94,5 +96,8 @@ if(isset($_POST["update"]) && !empty($_POST["update"])){
             </div>        
         </div>
     </div>
+    <?php
+    include "footer.php";
+    ?>
 </body>
 </html>

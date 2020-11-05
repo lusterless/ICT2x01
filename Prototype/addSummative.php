@@ -51,6 +51,7 @@ if(isset($_POST["add"]) && !empty($_POST["add"])){ //this is needed to check bas
         $subFeedback = $input_feedback;
     }
 }
+$module = $Details->getMod();
 ?>
  
 <!DOCTYPE html>
@@ -75,10 +76,18 @@ if(isset($_POST["add"]) && !empty($_POST["add"])){ //this is needed to check bas
                         <h2>Add Summative Feedback</h2>
                     </div>
                    
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="formativeBackend.php" method="post">
                         <div class="form-group <?php echo (!empty($subComponent_err)) ? 'has-error' : ''; ?>">
                             <label>Sub Component Name</label>
-                            <input type="text" name="subComponent" class="form-control" value="<?php echo $subComponent; ?>">
+                            <?php
+                            echo "<select id='sub' name='sub'>";
+                            foreach($module->getAllComponent() as $f){
+                                foreach($f->getSub() as $g){
+                                    echo "<option value='".$g->getName()."'>".$g->getName()."</option>";
+                                }
+                            }
+                            echo "</select>";
+                            ?>
                             <span class="help-block"><?php echo $subComponent_err;?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($subScore_err)) ? 'has-error' : ''; ?>">
@@ -88,8 +97,10 @@ if(isset($_POST["add"]) && !empty($_POST["add"])){ //this is needed to check bas
                         </div>
                         <div class="form-group <?php echo (!empty($subFeedback_err)) ? 'has-error' : ''; ?>">
                             <label>Feedback</label>
-                            <input type="text" name="subFeedback" class="form-control" value="<?php echo $subFeedback; ?>">
+                            <input type="text" name="feedback" class="form-control" value="<?php echo $subFeedback; ?>">
                             <span class="help-block"><?php echo $subFeedback_err;?></span>
+                        </div>
+                        <div class="form-group">
                         </div>
                         <input type="hidden" name="add" value="<?php echo $subComponent; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
