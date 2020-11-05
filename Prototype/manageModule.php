@@ -40,13 +40,13 @@ else{
     ?>
       <div class="container" id="widgetContainer">
         <div class="row">
-            <a href="#">
+            <a href="addSummative.php">
                 <div class="manageWidget">
                     <img src="images/mountain1.jpg" alt="summative Feedback">
                     <div class="comments">Add Summative Feedback</div>
                 </div>
             </a>
-            <a href="#">
+            <a href="addFormative.php">
                 <div class="manageWidget">
                     <img src="images/mountain2.jpg" alt="formative feedback">
                     <div class="comments">Add Formative Feedback</div>
