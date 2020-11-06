@@ -36,7 +36,7 @@ class students implements iusers{
     public function setMod($mod){$this->module = $mod;}
 }
 
-class Professor implements iusers{
+class Professor implements iProf, iusers{
     private $student = [];
     private $user, $name, $tel, $role, $module, $email;
     public function __construct($tel, $name, $user, $role, $email){
