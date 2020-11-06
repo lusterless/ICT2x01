@@ -15,8 +15,3 @@ interface iusers{
     public function getEmail();   
     public function setMod($mod);
 }
-
-interface iProf{
-    public function studentPush($student);
-    public function getStudents();
-}

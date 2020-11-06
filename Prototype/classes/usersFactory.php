@@ -10,16 +10,16 @@ class usersFactory{
     public static function createUser($role, $row, $conn){
         $username = $row["email"];
         if($role == "professor"){
-            $prof = new professor($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);
+            $prof = new professor($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable  
             if($row["module"]!=""){
                 //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]);
                 $prof->setMod($modulee);
             }
             $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-            return $prof;
+            return $prof; //return object variable 
         }else{
-            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]);    
+            $student = new students($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable    
             if($row["module"]!=""){
                 //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]);
@@ -27,7 +27,7 @@ class usersFactory{
             }
             //reset account counter
             $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-            return $student;            
+            return $student; //return object variable           
         }
     }
     
