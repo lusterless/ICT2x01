@@ -7,6 +7,7 @@ and open the template in the editor.
 <?php
 
 include "Iusers.class.php";
+include "studentsComposite.php";
 //abstract class Users{
 //
 //    public function getMod(){return $this->module;}
@@ -18,7 +19,7 @@ include "Iusers.class.php";
 //    public function setMod($mod){$this->module = $mod;}
 //}
 
-class students implements iusers{
+class students implements iusers, studentsComposite{
     private $user, $name, $tel, $role, $module, $email;
     public function __construct($tel, $name, $user, $role, $email){
         $this->user = $user;
@@ -27,6 +28,7 @@ class students implements iusers{
         $this->role = $role;
         $this->email=$email;
     }
+    //iusers-
     public function getMod(){return $this->module;}
     public function getTel(){return $this->tel;}
     public function getName(){return $this->name;}
@@ -34,9 +36,16 @@ class students implements iusers{
     public function getRole(){return $this->role;}  
     public function getEmail(){return $this->email;}     
     public function setMod($mod){$this->module = $mod;}
+    //students composite, recursive get info
+    public function getStudents() {
+        return self::getMod();
+    }
+    public function studentPush($student) {
+        throw new Exception("Not implemented");
+    }
 }
 
-class Professor implements iusers{
+class Professor implements iusers, studentsComposite{
     private $student = [];
     private $user, $name, $tel, $role, $module, $email;
     public function __construct($tel, $name, $user, $role, $email){
@@ -46,8 +55,14 @@ class Professor implements iusers{
         $this->role = $role;
         $this->email=$email;
     }
-    public function studentPush($student){$this->student= array_push($this->student, (object) $student);}
-    public function getStudents(){return $this->student;}
+    //students composite
+    public function studentPush($student){$this->student[]= $student;}
+    public function getStudents(){
+        foreach($this->student as $s){
+            $s->getStudents();
+        } 
+    }
+    //iusers
     public function getMod(){return $this->module;}
     public function getTel(){return $this->tel;}
     public function getName(){return $this->name;}
@@ -56,4 +71,3 @@ class Professor implements iusers{
     public function getEmail(){return $this->email;}     
     public function setMod($mod){$this->module = $mod;}
 }
-
