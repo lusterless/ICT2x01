@@ -3,9 +3,11 @@
 include "sqlConnection.php";
 include "classes/users.class.php";
 include "classes/module.class.php";
+include "classes/ProfessorDictionaryAdapter.php";
 
 session_start();
 $Details = "";
+$studentList = $_SESSION["studentList"];
 if(!isset($_SESSION['sessionInfo'])){
     header("Location:loginPage.php");
 }
@@ -32,13 +34,20 @@ $module = $Details->getMod();
             <div class="row">
                 <div class="col-md-12">
                     <div class="page-header">
-                        <h2>Add Summative Feedback</h2>
+                        <h2>Add Formative Feedback</h2>
                     </div>
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="formativeBackEnd" method="post">
+                    <form action="feedbackBackend.php" method="post">
                         <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" name="studID" class="form-control" readonly required>
+                            <label>Choose Students</label>
+                            <div class="scrollableList">
+                            <?php
+                                foreach($studentList->SelectAll() as $eachStudent){
+                                    echo "<input type='checkbox' name='".$eachStudent->getUser()."' value='".$eachStudent->getUser()."'/>";
+                                    echo "<label for='".$eachStudent->getUser()."'>".strtolower($eachStudent->getName())."</label><br>";
+                                }
+                            ?>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Feedback</label>
