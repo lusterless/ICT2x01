@@ -7,7 +7,7 @@
  */
 
 class usersFactory{
-    public static function createUser($role, $row, $conn){
+    public static function createUser($row, $conn){
         $username = $row["email"];
         $user = new users($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable  
         if($row["module"]!=""){
@@ -19,7 +19,39 @@ class usersFactory{
         return $user; //return object variable 
     }
     
-    public static function filterStrings($data){
+    public static function getAllEnrollStudents($conn,$mod){
+        $studentsList = new ProfessorDictionaryAdapter();
+        $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
+        while($totalEnrolRow = $totalEnrolResult->fetch_assoc()){
+            if($totalEnrolRow["role"] != "professor"){
+                $user = self::createUser($totalEnrolRow, $conn);
+                $studentsList->Insert($user);
+            }
+        }
+        return $studentsList;
+    }
+    
+    public static function getModuleInfo($conn,$mod){
+        $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
+        $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
+        $modRow = $modResult->fetch_assoc();
+        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], $totalEnrolResult->num_rows, $mod);
+        //create component
+        $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
+        while($compRow = $compResult->fetch_assoc()){
+            $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
+        }
+        //create subcomponent
+        foreach ($modulee->getAllComponent() as $c){
+            $assID = $c->getID();
+            $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
+            while($subCompRow = $subCompResult->fetch_assoc()){
+                $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
+            }
+        }
+        return $modulee;
+    }
+        public static function filterStrings($data){
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -38,25 +70,5 @@ class usersFactory{
         else{
             return true;
         }
-    }
-    
-    public static function getModuleInfo($conn,$mod){
-        $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
-        $modRow = $modResult->fetch_assoc();
-        $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0, $mod);
-        //create component
-        $compResult = $conn->query("SELECT * FROM assessments WHERE module_id='$mod'");
-        while($compRow = $compResult->fetch_assoc()){
-            $modulee->pushComponent($compRow['assessment_id'],$compRow['assessment_name'], $compRow['assessment_weightage']);
-        }
-        //create subcomponent
-        foreach ($modulee->getAllComponent() as $c){
-            $assID = $c->getID();
-            $subCompResult = $conn->query("SELECT * FROM subAssessments WHERE module_id='$mod' AND assessment_id='$assID'");
-            while($subCompRow = $subCompResult->fetch_assoc()){
-                $c->pushSubComponent($subCompRow["subAssessment_name"], $subCompRow["subAssessment_weightage"]);
-            }
-        }
-        return $modulee;
     }
 }

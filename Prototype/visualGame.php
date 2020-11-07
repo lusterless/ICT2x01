@@ -48,15 +48,16 @@ if($Details->getMod() != ""){
                 $module = $Details->getMod();
                 echo "
                     <div class='container' id='widgetC'>
-                    <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
+                    <table style='width: 100%;' class='modTab'>
+                    <tr>
+                       <th colspan='3' style='text-align: center;'>Module: ". $module->getMod()."</th>                            
+                    </tr>
                     <table style='width: 100%;' class='modTab'>
                     <tr>
                         <th>Component</th>
                         <th>Sub-Component</th>
                         <th>Weight</th>
                   </tr>";
-
-
                 foreach ($module->getAllComponent() as $f){
                     foreach($f -> getSub() as $g){
                         echo "<tr>";

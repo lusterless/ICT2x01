@@ -8,6 +8,7 @@ and open the template in the editor.
 <?php
 include "classes/users.class.php";
 include "classes/module.class.php";
+include "classes/ProfessorDictionaryAdapter.php";
 
 session_start();
 $Details = "";
@@ -129,26 +130,29 @@ else{
           <button type="button" @click="prevStep">Go Back</button>
           <button type="button" @click="nextStep();addModule();">Confirm</button>';
             if($Details->getMod() != ""){
-             
                 header("Location:createPageProf.php");
             }
         echo '</div>';
-        
-      echo ' </div>';
-                    echo '<div v-if="step === 5">
+        echo ' </div>';
+        echo '<div v-if="step === 5">
                 <div>
                 <h2>Success</h2>';
                   echo '<button type="submit">Back to dashboard</button>
                 </div>
               </div>';
-      
             echo '</form>';
         }else{
              $module = $Details->getMod();
+             $studentList = $_SESSION["studentList"];
              echo "
                  <div class='container' id='widgetC'>
-                 <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
                  <table style='width: 100%;' class='modTab'>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Module: ". $module->getMod()."</th>                            
+                 </tr>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Total Enrolled: ". (string)((int)$module->getTotalEnroll() - 1)."</th>                            
+                 </tr>                 
                  <tr>
                      <th>Component</th>
                      <th>Sub-Component</th>
@@ -157,14 +161,35 @@ else{
              foreach ($module->getAllComponent() as $f){
                  foreach($f -> getSub() as $g){
                      echo "<tr>";
-                     echo "<td>".$f->getName()."</th>";
-                     echo "<td>".$g->getName()."</th>";
-                     echo "<td>".$g->getWeight()."</th>";
+                     echo "<td>".$f->getName()."</td>";
+                     echo "<td>".$g->getName()."</td>";
+                     echo "<td>".$g->getWeight()."</td>";
                      echo "</tr>";
                  }
              }
              echo "</td>";
              echo "</tr></table></div>";
+             echo "<div class='container' id='studentC'>
+                    <table style='width: 100%;' class='modTab'>
+                         <tr>
+                             <th colspan='4' style='text-align: center;'>Enrolled Students</th>                            
+                         </tr>
+                         <tr>
+                             <th>ID</th>
+                             <th>Name</th>
+                             <th>Email</th>
+                             <th>Phone No.</th>
+                       </tr>";
+            foreach($studentList->SelectAll() as $f){
+                echo "<tr>";
+                echo "<td>".$f->getUser()."</td>";
+                echo "<td>".$f->getName()."</td>";
+                echo "<td>".$f->getEmail()."</td>";
+                echo "<td>".$f->getTel()."</td>";
+                echo "</tr>";
+            }
+            echo"   </table>
+                </div>";
          }
         include "footer.php";
     ?>  

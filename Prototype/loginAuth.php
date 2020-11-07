@@ -9,6 +9,7 @@ include_once "classes/users.class.php";
 include_once "classes/module.class.php";
 include_once "classes/feedbacks.class.php";
 include_once "classes/usersFactory.php";
+include_once "classes/ProfessorDictionaryAdapter.php";
 include_once "sqlConnection.php";
 
 //declare userCredentials Class
@@ -30,12 +31,16 @@ else{
         $status = usersFactory::checkAccountLocked($row);
         if($row["password"] == $password){
             if($status == true){
-                $user = usersFactory::createUser($row["role"], $row, $conn);
+                $user = usersFactory::createUser($row, $conn);
                 session_start();
                 $_SESSION["sessionInfo"]= $user;
                 if($row["role"] != "professor"){
                     header("Location:visualGame.php");
                 }else{
+                    if($row["module"] != ""){
+                        $studentList = usersFactory::getAllEnrollStudents($conn, $row["module"]);
+                        $_SESSION["studentList"] = $studentList;
+                    }
                     header("Location:createPageProf.php");
                 }
             }
