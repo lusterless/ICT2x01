@@ -7,6 +7,6 @@
  */
 
 interface iProfessorGateway{
-    public function Insert($student) : void;
-    public function SelectAll() : array;
+    public function Insert($student);
+    public function SelectAll();
 }

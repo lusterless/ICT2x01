@@ -7,11 +7,11 @@
  */
 
 interface iusers{
-    public function getMod(): Module;
-    public function getTel(): string;
-    public function getName(): string;
-    public function getUser(): string;
-    public function getRole() : string;
-    public function getEmail(): string;   
-    public function setMod($mod) :void;
+    public function getMod();
+    public function getTel();
+    public function getName();
+    public function getUser();
+    public function getRole();
+    public function getEmail();   
+    public function setMod($mod);
 }

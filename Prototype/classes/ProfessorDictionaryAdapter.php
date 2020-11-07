@@ -9,6 +9,6 @@
 //dictionary of students of type users
 class ProfessorDictionaryAdapter implements iProfessorGateway{
     private $studentList = [];
-    public function Insert($student) : void{$this->studentList[] = $student;}
-    public function SelectAll() : array{return $this->$studentList;}
+    public function Insert($student){$this->studentList[] = $student;}
+    public function SelectAll(){return $this->$studentList;}
 }
