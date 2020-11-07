@@ -1,6 +1,5 @@
 <?php
 // Include config file
-include "sqlConnection.php";
 include "classes/users.class.php";
 include "classes/module.class.php";
 include "classes/ProfessorDictionaryAdapter.php";
@@ -40,10 +39,10 @@ $module = $Details->getMod();
                     <form action="feedbackBackend.php" method="post">
                         <div class="form-group">
                             <label>Choose Students</label>
-                            <div class="scrollableList">
+                            <div class="scrollableList required">
                             <?php
                                 foreach($studentList->SelectAll() as $eachStudent){
-                                    echo "<input type='checkbox' name='".$eachStudent->getUser()."' value='".$eachStudent->getUser()."'/>";
+                                    echo "<input type='checkbox' name='studentList[]' value='".$eachStudent->getUser()."'/>";
                                     echo "<label for='".$eachStudent->getUser()."'>".strtolower($eachStudent->getName())."</label><br>";
                                 }
                             ?>
@@ -53,9 +52,16 @@ $module = $Details->getMod();
                             <label>Feedback</label>
                             <textarea name="feedback" class="form-control" required></textarea>
                         </div>
+                        <input type='hidden' name='formativePage' value='formativePage'>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>
+                    <?php
+                        if(isset($_SESSION["msg"])){
+                            $msg = $_SESSION["msg"];
+                            echo "<p>".$msg."</p";
+                        }
+                    ?>
                 </div>
             </div>        
         </div>
@@ -65,3 +71,7 @@ $module = $Details->getMod();
     ?>
 </body>
 </html>
+
+<?php
+unset($_SESSION["msg"]);
+?>

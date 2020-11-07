@@ -107,6 +107,18 @@ var app = new Vue({
         }
         //location.reload();
         //return false;
+        for(i=0;i < this.assessments.length;i++){
+        for(j=0;j<this.assessments[i].subAssessments.length;j++){
+            for(k=0;k< this.students.length;k++){
+                axios.post('ajaxfile.php', {
+                request: 5,
+                assessmentid: i + 1,
+                subassessmentname: this.assessments[i].subAssessments[j].name,
+                student: this.students[k]
+            })
+                }
+            }
+        }
         } else{
             alert('Fill all fields.');
         }
@@ -254,7 +266,6 @@ function showDataFile(e, o)
     html += "<td>" + value[0] + "</td>";
     html += "<td>" + value[1] + "</td>";
     html += "<td>" + value[2] + "</td>";
-
     html += "</tr>";
   });
   html += '</table>';

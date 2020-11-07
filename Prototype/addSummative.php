@@ -44,7 +44,7 @@ $module = $Details->getMod();
                             <div class="scrollableList">
                             <?php
                                 foreach($studentList->SelectAll() as $eachStudent){
-                                    echo "<input type='checkbox' name='".$eachStudent->getUser()."' value='".$eachStudent->getUser()."'/>";
+                                    echo "<input type='checkbox' name='studentList[]' value='".$eachStudent->getUser()."'/>";
                                     echo "<label for='".$eachStudent->getUser()."'>".strtolower($eachStudent->getName())."</label><br>";
                                 }
                             ?>
@@ -72,12 +72,23 @@ $module = $Details->getMod();
                         </div>
                         <div class="form-group">
                         </div>
+                        <input type='hidden' name='summativePage' value='summativePage'>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>
+                    <?php
+                        if(isset($_SESSION["msg"])){
+                            $msg = $_SESSION["msg"];
+                            echo "<p>".$msg."</p";
+                        }
+                    ?>
                 </div>
             </div>        
         </div>
     </div>
 </body>
 </html>
+
+<?php
+unset($_SESSION["msg"]);
+?>

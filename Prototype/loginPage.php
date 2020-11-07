@@ -48,3 +48,7 @@ else{
         </div>
     </body>
 </html>
+
+<?php
+unset($_SESSION["errormsg"]);
+?>

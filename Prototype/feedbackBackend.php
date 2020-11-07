@@ -8,6 +8,7 @@ and open the template in the editor.
 include "sqlConnection.php";
 include "classes/users.class.php";
 include "classes/module.class.php";
+include "classes/usersFactory.php";
 
 session_start();
 $Details = "";
@@ -19,24 +20,71 @@ else{
     if($Details->getRole() != "professor" || $Details->getMod() == ""){
         header("Location:loginPage.php");
     }
-    $id = $_POST["studID"];
-    $feedback = $_POST["feedback"];
-    if(isset($_POST["sub"])){
-        $subAss = $_POST["sub"];
-        $score = $_POST["score"];
-    }
-
-    if (!$conn->connect_error)
-    {
-        if(isset($_POST["sub"])){
-            feedbackFactory::addSummative($conn, $id, $feedback, $subAss, $score);
-        }else{    
-            feedbackFactory::addFormative($conn, $id, $feedback);
-        }
-    }
 }
 
 
+//formativeFeedback
+$msg = "";
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["formativePage"])) {
+    if ($conn->connect_error){
+        $msg .= "Database Error\n";
+    }else{
+        $studentChosen = $fb = ""; //set variables
+        $studentChosen = $_POST["studentList"];
+        $fb = usersFactory::filterStrings($_POST["feedback"]);
+        foreach($studentChosen as $sc){
+            $sc = usersFactory::filterStrings($sc);
+            $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$sc."','".$fb."')");
+        }
+        $msg .= "Feedbacks added successfully";
+    }
+    $_SESSION["msg"] = $msg;
+    header("Location:addFormative.php");
+}else{
+    if(!isset($_POST["studentList"])){
+        $msg .= "Please choose at least 1 students.\n";
+    }
+    if(!isset($_POST["feedback"])){
+        $msg .= "Please enter a valid feedback.\n";
+    }
+    $_SESSION["msg"] = $msg;
+    header("Location:addFormative.php");
+}
 
+
+//summativeFeedback
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_POST["score"]) && $_POST["score"] >= 0 && $_POST["score"] <= 100) && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["summativePage"])) {
+    if ($conn->connect_error){
+        $msg .= "Database Error\n";
+    }else{
+        $studentChosen = $fb = $sub = $score = ""; //set variables
+        $studentChosen = $_POST["studentList"];
+        $fb = usersFactory::filterStrings($_POST["feedback"]);
+        $sub = usersFactory::filterStrings($_POST["sub"]);
+        $score = $_POST["score"];
+        foreach($studentChosen as $sc){
+            $sc = usersFactory::filterStrings($sc);
+            $conn->query("UPDATE userSummative SET summative_score='".$score."', summative_feedback='".$fb."' WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
+        } 
+        $msg .= "Feedbacks added successfully";
+    }
+    $_SESSION["msg"] = $msg;
+    header("Location:addSummative.php");
+}else{
+    if(!isset($_POST["studentList"])){
+        $msg .= "Please choose at least 1 students.\n";
+    }
+    if(!isset($_POST["feedback"])){
+        $msg .= "Please enter a valid feedback.\n";
+    }
+    if(!isset($_POST["score"])){
+        $msg .= "Please enter a valid score.\n";
+    }
+    if($_POST["score"] < 0 || $_POST["score"] > 100){
+        $msg .= "Score entered Out of Range.\n";
+    }
+    $_SESSION["msg"] = $msg;
+    header("Location:addSummative.php");
+}
 
 

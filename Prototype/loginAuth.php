@@ -7,7 +7,6 @@ and open the template in the editor.
 <?php
 include_once "classes/users.class.php";
 include_once "classes/module.class.php";
-include_once "classes/feedbacks.class.php";
 include_once "classes/usersFactory.php";
 include_once "classes/ProfessorDictionaryAdapter.php";
 include_once "sqlConnection.php";

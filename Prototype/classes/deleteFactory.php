@@ -16,6 +16,8 @@ class deleteFactory{
         //delete everything from subAssessments
         $conn->query("DELETE FROM subAssessments WHERE module_id='$modID';"); 
         //delete module from session
+        $conn->query("DELETE FROM userSummative;");
+        $conn->query("DELETE FROM userFormative;");
     }
     
 }
