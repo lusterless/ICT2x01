@@ -65,5 +65,11 @@ else if($request == 3){
   #$Details->setMod($module);
   exit;
 }
+else if($request == 4){
+  $student = $data->student;
+  mysqli_query($conn,"UPDATE users SET module='1' WHERE studentid='".$student."'");
+
+  exit;
+}
 
 ?>

@@ -18,7 +18,7 @@ include "Iusers.class.php";
 //    public function setMod($mod){$this->module = $mod;}
 //}
 
-class students implements iusers, studentsComposite{
+class students implements iusers{
     private $user, $name, $tel, $role, $module, $email;
     public function __construct($tel, $name, $user, $role, $email){
         $this->user = $user;
@@ -37,7 +37,7 @@ class students implements iusers, studentsComposite{
     public function setMod($mod){$this->module = $mod;}
 }
 
-class Professor implements iusers, studentsComposite{
+class Professor implements iusers{
     private $student = [];
     private $user, $name, $tel, $role, $module, $email;
     public function __construct($tel, $name, $user, $role, $email){
