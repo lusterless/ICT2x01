@@ -7,7 +7,6 @@ and open the template in the editor.
 <?php
 
 include "Iusers.class.php";
-include "studentsComposite.php";
 //abstract class Users{
 //
 //    public function getMod(){return $this->module;}
@@ -36,13 +35,6 @@ class students implements iusers, studentsComposite{
     public function getRole(){return $this->role;}  
     public function getEmail(){return $this->email;}     
     public function setMod($mod){$this->module = $mod;}
-    //students composite, recursive get info
-    public function getStudents() {
-        return self::getMod();
-    }
-    public function studentPush($student) {
-        throw new Exception("Not implemented");
-    }
 }
 
 class Professor implements iusers, studentsComposite{
@@ -55,13 +47,8 @@ class Professor implements iusers, studentsComposite{
         $this->role = $role;
         $this->email=$email;
     }
-    //students composite
     public function studentPush($student){$this->student[]= $student;}
-    public function getStudents(){
-        foreach($this->student as $s){
-            $s->getStudents();
-        } 
-    }
+    public function getStudents(){return $this->student;}
     //iusers
     public function getMod(){return $this->module;}
     public function getTel(){return $this->tel;}
