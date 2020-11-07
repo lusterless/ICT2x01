@@ -16,6 +16,8 @@ and open the template in the editor.
 }
 
 .manageWidget{
+    position: relative;
+    overflow: hidden;
     border-radius: 25px;    
     float: left;
     width: 46%;
@@ -24,10 +26,32 @@ and open the template in the editor.
     background-color: white;
 }
 
+.manageWidget img{
+    width: 350px; 
+    transition: transform .5s ease;
+    opacity: 0.5;
+}
 
+.manageWidget:hover img {
+    transform: scale(1.1);
+}
+
+.manageWidget .comments{
+    color: black; 
+    text-align: center; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+}
 
 @media screen and (max-width: 1530px){
+    .manageWidget img{
+        width: 1300px;
+    }
     .manageWidget{
+        position: relative;
+        overflow: hidden;
         border-radius: 25px;    
         float: left;
         width: 100%;

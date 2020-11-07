@@ -6,6 +6,10 @@ var app = new Vue({
     module: null,
     startdate: null,
     enddate: null,
+    fileName: "",
+    students: [],
+    database: "",
+    csvfile: null,
     categories: ["CA", "Exam", "CT"],
     totalWeightage: 100,
     assessments: [
@@ -27,24 +31,88 @@ var app = new Vue({
       if (this.step >= 1 && !this.module) {
         this.addError("Module name required!");
       } else if (this.step >=1 && !this.startdate) {
-        this.addError("Start date required!")
+        this.addError("Start date required!");
       } else if (this.step >=1 && !this.enddate) {
-        this.addError("End date required!")
+        this.addError("End date required!");
       } else if (this.step >=1 && this.enddate < this.startdate) {
-        this.addError("End date cannot be earlier than start date!")
+        this.addError("End date cannot be earlier than start date!");
       } else if (this.step >= 2 && this.assessments.length > 0) {
         this.checkAssessments();
-      }
+      } 
       if (this.errors.length === 0) {
         this.$set(this, "step", this.step + 1);
       }
     },
+            handleUpload(event) {
+            const file = event.target.files[0];
+            this.fileName = file.name;
+            const reader = new FileReader();
+            var ids = [];
+            reader.onload = event => {
+                if (this.fileName.endsWith(".csv")) {
+                    var result = event.target.result;
+                    result = result.split(/\r\n|\n/);
+                    
+                    for (id of result) {
+                        if (id != "id" && id.trim().length > 0) {
+                            ids.push(id.trim());
+                        }
+                    }
+                    this.students = ids;
+                } else {
+                    this.students = [];
+                    alert("Please upload only .csv files!");
+                }
+            };
+            reader.readAsText(file);
+        },
     prevStep() {
       if (this.step > 1) {
         this.errors = [];
         this.$set(this, "step", this.step - 1);
       }
     },
+        addModule: function(){
+        if(this.module !== '' && this.startdate !== '' && this.enddate !== ''){
+            axios.post('ajaxfile.php', {
+            request: 1,
+            module: this.module,
+            startdate: this.startdate,
+            enddate: this.enddate,
+            assessment: this.assessments
+            })
+        for(i=0;i < this.assessments.length;i++){
+            axios.post('ajaxfile.php', {
+            request: 2,
+            assessmentid: i + 1,
+            category: this.assessments[i].category,
+            assessmentweightage: this.assessments[i].weightage
+            })
+        }
+        for(i=0;i < this.assessments.length;i++){
+            for(j=0;j<this.assessments[i].subAssessments.length;j++){
+                    axios.post('ajaxfile.php', {
+                    request: 3,
+                    assessmentid: i + 1,
+                    subassessmentname: this.assessments[i].subAssessments[j].name,
+                    subassessmentweightage: this.assessments[i].subAssessments[j].weightage        
+                }) 
+            }
+        }
+        for(i=0;i < this.students.length;i++){
+            axios.post('ajaxfile.php', {
+            request: 4,
+            student: this.students[i]
+            })
+        }
+        //location.reload();
+        //return false;
+        } else{
+            alert('Fill all fields.');
+        }
+   
+    },
+    
     addError(newError) {
       this.errors.filter((err) => err === newError).length === 0
         ? this.errors.push(newError)
@@ -193,3 +261,19 @@ function showDataFile(e, o)
   document.getElementById("data").innerHTML = html;
   document.getElementById("data").style.color="blue";
 }
+
+$(document).ready(function() {
+    $('#thefile').change(function(e) {
+        if (e.target.files != undefined) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#text').text(e.target.result);
+            };
+
+            reader.readAsText(e.target.files.item(0));
+        }
+
+        return false;
+    });
+});

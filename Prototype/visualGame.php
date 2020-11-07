@@ -34,9 +34,8 @@ if($Details->getMod() != ""){
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="css/userGame.css"> 
-        <link rel="stylesheet" type="text/css" href="css/moduleTable.css">       
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>  
+        <link rel="stylesheet" type="text/css" href="css/moduleTable.css">     
+        <link rel="stylesheet" type="text/css" href="css/manageModule.css">          
         <title></title>
     </head>
     <body id="gameBody">
@@ -46,9 +45,32 @@ if($Details->getMod() != ""){
                 echo "<h1>No Module Enrolled</h1>";
             }
             else{
+                $module = $Details->getMod();
+                echo "
+                    <div class='container' id='widgetC'>
+                    <table style='width: 100%;' class='modTab'>
+                    <tr>
+                       <th colspan='3' style='text-align: center;'>Module: ". $module->getMod()."</th>                            
+                    </tr>
+                    <table style='width: 100%;' class='modTab'>
+                    <tr>
+                        <th>Component</th>
+                        <th>Sub-Component</th>
+                        <th>Weight</th>
+                  </tr>";
+                foreach ($module->getAllComponent() as $f){
+                    foreach($f -> getSub() as $g){
+                        echo "<tr>";
+                        echo "<td>".$f->getName()."</th>";
+                        echo "<td>".$g->getName()."</th>";
+                        echo "<td>".$g->getWeight()."</th>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</td>";
+                echo "</tr></table></div>";
                 echo '<canvas id="interactiveCanvas" width="900px" height="230px"></canvas>';
             }
-
             include "footer.php";
         ?>
         <!-- The Modal -->

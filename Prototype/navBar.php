@@ -6,7 +6,8 @@
  */
 ?>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>  
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">   
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -58,8 +59,9 @@
         echo "<p> Phone No.: ".$Details->getTel()."</p>";
         echo "<p> ACC Type: ".$Details->getRole()."</p>";
         echo "<p> Email: ".$Details->getEmail()."</p>";
-        if($Details->getMod() != "")
+        if($Details->getMod() != ""){
             echo "<p> Currently Enrolled: ".$Details->getMod()->getMod()."</p>";
+        }
       ?>
     </div>
     <div class="modal-footer" style="text-align: center;">

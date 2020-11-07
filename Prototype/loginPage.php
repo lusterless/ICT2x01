@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-    
+
 <?php
 include "classes/users.class.php";
 
-session_start();
-$Details = "";
-if (isset($_SESSION['sessionInfo'])) {
-    $Details = $_SESSION['sessionInfo'];
-    if($Details->getRole()=="student")
-        header("Location:visualGame.php");
-    else
-        header("Location:createPageProf.php");
-}
-else{
-    unset($_SESSION["sessionInfo"]);
-    session_destroy();
-}
-?>
+// session_start();
+// $Details = "";
+// if (isset($_SESSION['sessionInfo'])) {
+//     $Details = $_SESSION['sessionInfo'];
+//     if($Details->getRole()=="student")
+//         header("Location:visualGame.php");
+//     else
+//         header("Location:createPageProf.php");
+// }
+// else{
+//     unset($_SESSION["sessionInfo"]);
+//     session_destroy();
+// }
+// ?>
 
 <html lang="en">
     <head>

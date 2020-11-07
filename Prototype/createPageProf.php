@@ -30,10 +30,10 @@ else{
     <title>Create a module</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">   
+    <link rel="stylesheet" type="text/css" href="css/createPageProf.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <?php
@@ -41,7 +41,7 @@ else{
     
         if($Details->getMod() == "")
         {
-            echo '<form id="app" class="container" action="" method="post" @submit="submit">
+           echo '<form id="app" class="container" action="success.php" method="post" @submit="submit">
               <!-- Error Banner -->
               <p v-if="errors.length">
                 <b>Please correct the following error(s):</b>
@@ -50,12 +50,17 @@ else{
                 </ul>
               </p>
               <!-- Create a Module -->
-              <div v-if="step === 1">
-                <h1>Create a Module</h1>
-                <br>Module Name: <input placeholder="Module name" v-model="module" />
+              <div v-if="step === 1" class="form-style-6">
+                <h1>Create A Module</h1>
+                
+                <br>Module Name: <input type="text" placeholder="Module Name" v-model="module" />
+                <br>
                 <br>Module Start date: <input type="date" v-model="startdate" />
+                <br>
                 <br>Module End date: <input type="date" v-model="enddate" />
+                <br>
                 <button type="button" @click="nextStep">Next</button>
+                
               </div>
               <!-- Add Assessment for Module -->
               <div v-if="step === 2">
@@ -99,47 +104,75 @@ else{
                 <div>
                   <h1>Add Students to Module</h1>
                   <br>
-                    <input id="fileUpload" type="file" hidden>
-                    <button @click="chooseFiles()">Choose</button>
+                  {{ step }}
+                  {{ students.length }}
+                  {{ errors.length }}
+                    <input type="file" v-on:change="handleUpload" accept=".csv"/>
+                    <div v-if="students.length != 0" v-for="student in students">
+                        id: {{ student}}
+                    </div>
                   <button type="button" @click="prevStep">Go Back</button>
                   <button type="button" @click="nextStep">Next</button>
                 </div>
               </div>
               <!-- Confirmation -->
-              <div v-if="step === 4">
+      <div v-if="step === 4">
+        <div>
+            <h1>Confirmation page</h1>
+            <br>
+            <h5>Module Name: {{ module }}</h5>
+            <h5>Module Start Date: {{ startdate }}</h5>
+            <h5>Module End Date: {{ enddate }}</h5>
+        <div v-for="(assessment, index) in assessments">
+          <div>
+            <h5>Assessment {{ index + 1 }} : {{ assessment.category }}</h5>
+            <h5>Assessment {{ index + 1 }} Weightage : {{ assessment.weightage}}</h5>
+            <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
+                <h5>Sub Assessment {{ subIndex + 1 }} : {{ subAssessment.name }} : {{ subAssessment.weightage }}</h5>
+            </div>
+          </div>
+        </div>
+          <button type="button" @click="prevStep">Go Back</button>
+          <button type="button" @click="nextStep();addModule();">Confirm</button>';
+            if($Details->getMod() != ""){
+             
+                header("Location:createPageProf.php");
+            }
+        echo '</div>';
+        
+      echo ' </div>';
+                    echo '<div v-if="step === 5">
                 <div>
-                  <button type="button" @click="prevStep">Go Back</button>
-                  <button type="button" @click="nextStep">Next</button>
+                <h2>Success</h2>';
+                  echo '<button type="submit">Back to dashboard</button>
                 </div>
-              </div>
-            </form>';
-        }
-        else{
-            $module = $Details->getMod();
-            echo "<table class='modTab'>
-                <tr>
-                    <th>Module Name</th>
-                    <th>Component</th>
-                    <th>Weight</th>
-                    <th>Sub-Component</th>
-                    <th>Weight</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-              </tr>
-              <tr>
-                  <td>". $module->getNumber()."</td>
-              </tr>
-              <tr>";
-            foreach ($module->getAllComponent() as $f){
-                echo "<th>".$f->getName()."</th>";
-                echo "<th>".$f->getWeight()."</th>";
-                foreach ($f->getSub() as $d){
-                    echo "<th>".$d->getName()."</th>";
-                    echo "<th>".$d->getWeight()."</th>";
-                }
-            }      
-            echo "</tr></table>";
-        }
+              </div>';
+      
+            echo '</form>';
+        }else{
+             $module = $Details->getMod();
+             echo "
+                 <div class='container' id='widgetC'>
+                 <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
+                 <table style='width: 100%;' class='modTab'>
+                 <tr>
+                     <th>Component</th>
+                     <th>Sub-Component</th>
+                     <th>Weight</th>
+               </tr>";
+             foreach ($module->getAllComponent() as $f){
+                 foreach($f -> getSub() as $g){
+                     echo "<tr>";
+                     echo "<td>".$f->getName()."</th>";
+                     echo "<td>".$g->getName()."</th>";
+                     echo "<td>".$g->getWeight()."</th>";
+                     echo "</tr>";
+                 }
+             }
+             echo "</td>";
+             echo "</tr></table></div>";
+             
+         }
         include "footer.php";
     ?>  
     <script src="js/createPageProf.js"></script>

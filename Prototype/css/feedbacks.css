@@ -1,0 +1,27 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 5, 2020, 10:44:09 PM
+    Author     : KOH
+*/
+
+.wrapper{
+    width: 500px;
+    margin: 0 auto;
+}
+
+.scrollableList { 
+    padding: 5px;
+    border:2px solid #ccc; 
+    width:100%; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    border-radius: 10px;
+}
+
+.scrollableList label{
+    margin-left: 5px;
+}
