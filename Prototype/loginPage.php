@@ -37,6 +37,7 @@ else{
                     <input minlength="8" type="password" placeholder="Enter Password" name="password" required/>
                 </div>
                 <div>
+                    <input type='hidden' name='login' value='login'>
                     <button type="submit" class="loginBtn">Login</button>
                 </div>
             </form>

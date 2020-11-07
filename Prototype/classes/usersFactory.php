@@ -8,15 +8,27 @@
 
 class usersFactory{
     public static function createUser($row, $conn){
+        $role = $row["role"];
         $username = $row["email"];
-        $user = new users($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable  
-        if($row["module"]!=""){
-            //store into session variables
-            $modulee = self::getModuleInfo($conn,$row["module"]);
-            $user->setMod($modulee);
+        if($role == "professor"){
+            $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $professor->setMod($modulee);
+            }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $professor; //return object variable 
+        }else{
+            $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $student->setMod($modulee);
+            }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $student; //return object variable             
         }
-        $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-        return $user; //return object variable 
     }
     
     public static function getAllEnrollStudents($conn,$mod){

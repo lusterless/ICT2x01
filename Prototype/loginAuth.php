@@ -15,62 +15,65 @@ include_once "sqlConnection.php";
 $username = usersFactory::filterStrings($_POST["username"]);
 $password = usersFactory::filterStrings($_POST["password"]);
 $errormsg = "";
-
-if ($conn->connect_error)
-{
-    session_start();
-    $errormsg .= $conn->connect_error;
-    $_SESSION["errormsg"] = $errormsg;
-    header("Location:loginPage.php");
-}
-else{
-    $result = usersFactory::authenticateCredentials($conn, $username);
-    if($result->num_rows > 0){
-        $row = $result->fetch_assoc();
-        $status = usersFactory::checkAccountLocked($row);
-        if($row["password"] == $password){
-            if($status == true){
-                $user = usersFactory::createUser($row, $conn);
-                session_start();
-                $_SESSION["sessionInfo"]= $user;
-                if($row["role"] != "professor"){
-                    header("Location:visualGame.php");
-                }else{
-                    if($row["module"] != ""){
-                        $studentList = usersFactory::getAllEnrollStudents($conn, $row["module"]);
-                        $_SESSION["studentList"] = $studentList;
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
+    if ($conn->connect_error)
+    {
+        session_start();
+        $errormsg .= $conn->connect_error;
+        $_SESSION["errormsg"] = $errormsg;
+        header("Location:loginPage.php");
+    }
+    else{
+        $result = usersFactory::authenticateCredentials($conn, $username);
+        if($result->num_rows > 0){
+            $row = $result->fetch_assoc();
+            $status = usersFactory::checkAccountLocked($row);
+            if($row["password"] == $password){
+                if($status == true){
+                    $user = usersFactory::createUser($row, $conn);
+                    session_start();
+                    $_SESSION["sessionInfo"]= $user;
+                    if($row["role"] != "professor"){
+                        header("Location:visualGame.php");
+                    }else{
+                        if($row["module"] != ""){
+                            $studentList = usersFactory::getAllEnrollStudents($conn, $row["module"]);
+                            $_SESSION["studentList"] = $studentList;
+                        }
+                        header("Location:createPageProf.php");
                     }
-                    header("Location:createPageProf.php");
                 }
-            }
-            else{
-                $errormsg .= "Account locked, Please contact your administrator";
+                else{
+                    $errormsg .= "Account locked, Please contact your administrator";
+                    session_start();
+                    $_SESSION["errormsg"] = $errormsg;
+                    header("Location:loginPage.php");
+                }
+            }else{
+                if($status == false){
+                    $errormsg = "Account locked, Please contact your administrator";
+                }
+                else{
+                    $count = $row["count"] += 1;
+                    $conn->query("UPDATE users SET count='$count' WHERE email='$username'");
+                    $errormsg = "Incorrect Password";
+                }
                 session_start();
                 $_SESSION["errormsg"] = $errormsg;
                 header("Location:loginPage.php");
             }
-        }else{
-            if($status == false){
-                $errormsg = "Account locked, Please contact your administrator";
-            }
-            else{
-                $count = $row["count"] += 1;
-                $conn->query("UPDATE users SET count='$count' WHERE email='$username'");
-                $errormsg = "Incorrect Password";
-            }
+        }
+        else{
+            $errormsg .= "Incorrect Username/Password";
             session_start();
             $_SESSION["errormsg"] = $errormsg;
             header("Location:loginPage.php");
         }
+        $result->free_result();
+        unset($row);
     }
-    else{
-        $errormsg .= "Incorrect Username/Password";
-        session_start();
-        $_SESSION["errormsg"] = $errormsg;
-        header("Location:loginPage.php");
-    }
-    $result->free_result();
-    unset($row);
+}else{
+    header("Location:loginPage.php");
 }
 $conn->close();
 die;
