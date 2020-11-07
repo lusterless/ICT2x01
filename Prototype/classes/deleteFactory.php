@@ -7,7 +7,7 @@
  */
 
 class deleteFactory{
-    public static function clearAll($conn, $modID){
+    public static function clearAll($conn, $modID):void{
         $conn->query("UPDATE users SET module=NULL WHERE module='$modID';");
         //delete everything from module table
         $conn->query("DELETE FROM Module WHERE module_id='$modID';");

@@ -28,13 +28,13 @@ class users implements iusers{
         $this->email=$email;
     }
     //iusers-
-    public function getMod(){return $this->module;}
-    public function getTel(){return $this->tel;}
-    public function getName(){return $this->name;}
-    public function getUser(){return $this->user;}
-    public function getRole(){return $this->role;}  
-    public function getEmail(){return $this->email;}     
-    public function setMod($mod){$this->module = $mod;}
+    public function getMod() : Module{return $this->module;}
+    public function getTel() : string{return $this->tel;}
+    public function getName() : string{return $this->name;}
+    public function getUser() : string{return $this->user;}
+    public function getRole()  : string{return $this->role;}  
+    public function getEmail()  : string{return $this->email;}     
+    public function setMod($mod) : void{$this->module = $mod;}
 }
 //
 //class Professor implements iusers{

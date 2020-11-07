@@ -7,7 +7,7 @@
  */
 
 class usersFactory{
-    public static function createUser($role, $row, $conn){
+    public static function createUser($role, $row, $conn) : users{
         $username = $row["email"];
 //        if($role == "professor"){
         $user = new users($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable  
@@ -43,7 +43,7 @@ class usersFactory{
         return $conn->query($sql);
     }
     
-    public static function checkAccountLocked($row){
+    public static function checkAccountLocked($row) : bool{
         if($row["count"] >= 10){
             return false;
         }
@@ -52,7 +52,7 @@ class usersFactory{
         }
     }
     
-    public static function getModuleInfo($conn,$mod){
+    public static function getModuleInfo($conn,$mod) : Module{
         $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
         $modRow = $modResult->fetch_assoc();
         $modulee = new Module($modRow['module_name'], $modRow['start_date'], $modRow['end_date'], 0, $mod);
