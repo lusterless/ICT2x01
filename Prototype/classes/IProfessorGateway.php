@@ -6,3 +6,7 @@
  * and open the template in the editor.
  */
 
+interface iProfessorGateway{
+    public function Insert($student) : void;
+    public function SelectAll() : array;
+}
