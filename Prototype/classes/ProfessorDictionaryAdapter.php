@@ -8,7 +8,26 @@
 include "IProfessorGateway.php";
 //dictionary of students of type users
 class ProfessorDictionaryAdapter implements iProfessorGateway{
-    private $studentList = [];
+    private $studentList = []; //list of users class variable
     public function Insert($student){$this->studentList[] = $student;}
     public function SelectAll(){return $this->studentList;}
+    public function SelectByID($id){
+        $user = "";
+        foreach($this->studentList as $s){
+            if($id == $s->getUser()){
+                $user = $s;
+                break;
+            }
+        }
+        return $user;
+    }
+    public function Remove($id){
+        foreach($this->studentList as $s){
+            if($id == $s->getUser()){
+                $key = array_search($s, $this->studentList);
+                unset($this->studentList[$key]);
+                break;
+            }
+        }
+    }
 }

@@ -9,4 +9,6 @@
 interface iProfessorGateway{
     public function Insert($student);
     public function SelectAll();
+    public function SelectByID($id);
+    public function Remove($id);
 }

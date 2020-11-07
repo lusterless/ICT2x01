@@ -29,7 +29,6 @@ class Module implements ifeedback{
     }
     public function pushComponent($componentID, $componentName, $componentWeight){
         $comp = new Component($componentID, $componentName, $componentWeight);
-        //$this->components = array_push($this->components, (object) $comp);
         $this->components[] = $comp;
     }
     public function getNumber(){return $this->modNo;}
@@ -47,7 +46,16 @@ class Module implements ifeedback{
         $fb = new formativeFeedbacks($feedback);
         $this->formativeFeedback[] = $fb;
     }
-    public function getFormativeFeedback(){return $this->feedback;} //revamp this
+    /*composite getFormativefeedback(). The leaf is the formativefeedback class itself which implementes ifeedback interface class.
+    This module class also implements ifeedback interface class. Performs recursive formativeFeedback retrieval as 1 user can have
+    more than 1 feedback*/
+    public function getFormativeFeedback(){
+        $allFormative[] = "";
+        foreach($this->formativeFeedback as $f){
+            $allFormative[] = $f->getFormativeFeedback() . "\n";
+        }
+        return $allFormative;
+    }
 }
 
 class Component{

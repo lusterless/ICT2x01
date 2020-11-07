@@ -36,7 +36,7 @@ $module = $Details->getMod();
                         <h2>Add Formative Feedback</h2>
                     </div>
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="feedbackBackend.php" method="post">
+                    <form action="formativeBackend.php" method="post">
                         <div class="form-group">
                             <label>Choose Students</label>
                             <div class="scrollableList required">

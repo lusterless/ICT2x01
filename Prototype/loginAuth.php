@@ -32,14 +32,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
                 if($status == true){
                     $user = usersFactory::createUser($row, $conn);
                     session_start();
-                    $_SESSION["sessionInfo"]= $user;
                     if($row["role"] != "professor"){
+                        $user = usersFactory::getSummativeFeedback($conn, $user);
+                        $user = usersFactory::getFormativeFeedback($conn, $user);
+                        $_SESSION["sessionInfo"]= $user;
                         header("Location:visualGame.php");
                     }else{
                         if($row["module"] != ""){
                             $studentList = usersFactory::getAllEnrollStudents($conn, $row["module"]);
                             $_SESSION["studentList"] = $studentList;
                         }
+                        $_SESSION["sessionInfo"]= $user;
                         header("Location:createPageProf.php");
                     }
                 }
