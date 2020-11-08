@@ -3,9 +3,11 @@
 include "sqlConnection.php";
 include "classes/users.class.php";
 include "classes/module.class.php";
+include "classes/ProfessorDictionaryAdapter.php";
 
 session_start();
 $Details = "";
+$studentList = $_SESSION["studentList"];
 if(!isset($_SESSION['sessionInfo'])){
     header("Location:loginPage.php");
 }
@@ -36,7 +38,18 @@ $module = $Details->getMod();
                         <h2>Add Summative Feedback</h2>
                     </div>
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="formativeBackend.php" method="post">
+                    <form action="summativeBackend.php" method="post">
+                        <div class="form-group">
+                            <label>Choose Students</label>
+                            <div class="scrollableList">
+                            <?php
+                                foreach($studentList->SelectAll() as $eachStudent){
+                                    echo "<input type='checkbox' name='studentList[]' value='".$eachStudent->getUser()."'/>";
+                                    echo "<label for='".$eachStudent->getUser()."'>".strtolower($eachStudent->getName())."</label><br>";
+                                }
+                            ?>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Subject</label>
                             <?php
@@ -59,12 +72,23 @@ $module = $Details->getMod();
                         </div>
                         <div class="form-group">
                         </div>
+                        <input type='hidden' name='summativePage' value='summativePage'>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>
+                    <?php
+                        if(isset($_SESSION["msg"])){
+                            $msg = $_SESSION["msg"];
+                            echo "<p>".$msg."</p";
+                        }
+                    ?>
                 </div>
             </div>        
         </div>
     </div>
 </body>
 </html>
+
+<?php
+unset($_SESSION["msg"]);
+?>

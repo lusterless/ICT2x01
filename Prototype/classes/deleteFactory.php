@@ -8,7 +8,7 @@
 
 class deleteFactory{
     public static function clearAll($conn, $modID){
-        $conn->query("UPDATE users SET module=NULL, formative_Feedback=NULL WHERE module='$modID';");
+        $conn->query("UPDATE users SET module=NULL WHERE module='$modID';");
         //delete everything from module table
         $conn->query("DELETE FROM Module WHERE module_id='$modID';");
         //delete everything from assessments
@@ -16,6 +16,8 @@ class deleteFactory{
         //delete everything from subAssessments
         $conn->query("DELETE FROM subAssessments WHERE module_id='$modID';"); 
         //delete module from session
+        $conn->query("DELETE FROM userSummative;");
+        $conn->query("DELETE FROM userFormative;");
     }
     
 }

@@ -12,3 +12,16 @@ and open the template in the editor.
     width: 500px;
     margin: 0 auto;
 }
+
+.scrollableList { 
+    padding: 5px;
+    border:2px solid #ccc; 
+    width:100%; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    border-radius: 10px;
+}
+
+.scrollableList label{
+    margin-left: 5px;
+}
