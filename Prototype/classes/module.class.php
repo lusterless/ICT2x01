@@ -14,7 +14,6 @@ include "feedbacks.class.php";
  * $tempComp->pushSubComponent(Exam1, 20)
  * $tempComp->pushSubComponent(Exam2, 20)
  * ######Composition Code########
- * 
  *  */
 class Module implements ifeedback{
     private $modID, $startDate, $endDate, $totalEnrol, $modNo;

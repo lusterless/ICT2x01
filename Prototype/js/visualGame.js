@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+
+
 statusModalOpen = false;
 
 //current Date for tracking
@@ -144,6 +146,13 @@ function showSummative(){
 
 function showFormative(){
     fmodal.style.display = "block";
+//    var formativeBody = document.getElementById("formativeBody");
+//    for (var i = 0; i < formativeArray.length; i++) {
+//        var tag = document.createElement("p");
+//        var text = document.createTextNode(formativeArray[i]);
+//        tag.appendChild(text);  
+//        formativeBody.appendChild(tag);
+//    }
 }
 
 

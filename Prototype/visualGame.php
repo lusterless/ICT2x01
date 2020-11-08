@@ -27,7 +27,8 @@ if($Details->getMod() != ""){
     $oldStartDate = explode('-',$module->getStart());
     $newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
     $oldEndDate = explode('-', $module->getEnd());
-    $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];   
+    $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];
+    $formativeArray = $module->getFormativeFeedback();
 }
 ?>
 <html lang="en">
@@ -78,9 +79,9 @@ if($Details->getMod() != ""){
             <div class="modal-content">
                 <div class="modal-header">
                   <span class="close">&times;</span>
-                  <h2>Grades & Comments <span class="glyphicon glyphicon-user"></span> </h2>
+                  <h2>Summative Grades</h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id='summativeBody'>
                   Test
                 </div>
                 <div class="modal-footer">
@@ -92,10 +93,21 @@ if($Details->getMod() != ""){
             <div class="modal-content">
                 <div class="modal-header">
                   <span class="close">&times;</span>
-                  <h2>Comments <span class="glyphicon glyphicon-user"></span> </h2>
+                  <h2>Formative Feedback</h2>
                 </div>
-                <div class="modal-body">
-                  Test
+                <div class="modal-body" id='formativeBody'>
+                    <?php
+                        $formativeArray = $module->getFormativeFeedback();
+                        if(count($formativeArray) > 0){
+                            $counter = 1;
+                            foreach($formativeArray as $fb){
+                                echo "<p>".$counter.") ".$fb."</p>";
+                                $counter += 1;
+                            }
+                        }else{
+                            echo "<p>No Feedbacks Given</p>";
+                        }
+                    ?>
                 </div>
                 <div class="modal-footer">
                   <h3>Modal Footer</h3>
@@ -104,8 +116,9 @@ if($Details->getMod() != ""){
         </div>
     </body>
     <script type="text/javascript"> 
+//        formativeArray = <?php echo json_encode($formativeArray); ?>;
         startDate = <?php echo json_encode($newStartDate); ?>;
         endDate = <?php echo json_encode($newEndDate); ?>;
     </script>
-    <script src="js/visualGame.js" type="text/javascript"> </script>
+    <script src="js/visualGame.js" type="text/javascript"></script>
 </html>
