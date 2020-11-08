@@ -172,7 +172,7 @@ else{
              echo "<div class='container' id='studentC'>
                     <table style='width: 100%;' class='modTab'>
                          <tr>
-                             <th colspan='5' style='text-align: center;'>Enrolled Students</th>                            
+                             <th colspan='8' style='text-align: center;'>Enrolled Students</th>                            
                          </tr>
                          <tr>
                              <th>ID</th>
@@ -180,7 +180,11 @@ else{
                              <th>Email</th>
                              <th>Phone No.</th>
                              <th>Formative Feedbacks</th>
+                             <th>Summative Feedbacks</th>
+                             <th>Scores</th>
+                             <th>Summative Feedback</th>
                        </tr>";
+             //students
             foreach($studentList->SelectAll() as $f){
                 echo "<tr>";
                 echo "<td>".$f->getUser()."</td>";
@@ -196,7 +200,18 @@ else{
                 else{
                     echo "<option>No Feedbacks Given</option>";
                 }
-                echo "</select></tr>";
+                echo "</select></td>";
+                //subcomponent
+                echo "<td><select class='form-control' name='test' readonly>";
+                foreach($f->getMod()->getAllComponent() as $comp){
+                    foreach($comp->getSub() as $cs){
+                        echo "<option>";
+                        echo $cs->getName();
+                        echo "</option>";
+                    }
+                }
+                echo "</select></td>";
+                echo "</tr>";
             }
             echo"   </table>
                 </div>";
