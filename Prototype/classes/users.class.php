@@ -18,6 +18,8 @@ include "Iusers.class.php";
 //    public function setMod($mod){$this->module = $mod;}
 //}
 
+//every user can be a student or Professor
+//extra professor methods will be use with an adapter design pattern
 class users implements iusers{
     private $user, $name, $tel, $role, $module = "", $email;
     public function __construct($tel, $name, $user, $role, $email){
