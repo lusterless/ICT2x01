@@ -21,14 +21,23 @@ else{
 }    
 
 $module = $oldStartDate = $newStartDate = $oldEndDate = $newEndDate = "";
-
+$summativeArray = [];
 if($Details->getMod() != ""){
     $module = $Details->getMod();
     $oldStartDate = explode('-',$module->getStart());
     $newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
     $oldEndDate = explode('-', $module->getEnd());
     $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];
-    $formativeArray = $module->getFormativeFeedback();
+    foreach ($module->getAllComponent() as $f){
+        foreach($f -> getSub() as $g){
+            $tempArray = [];
+            $tempArray[] = $g->getName();
+            $tempArray[] = $g->getWeight();
+            $tempArray[] = $g->getScores();
+            $tempArray[] = $g->getSummativeFeedback();
+            $summativeArray[] = $tempArray;
+        }
+    }
 }
 ?>
 <html lang="en">
@@ -46,7 +55,6 @@ if($Details->getMod() != ""){
                 echo "<h1>No Module Enrolled</h1>";
             }
             else{
-                $module = $Details->getMod();
                 echo "
                     <div class='container' id='widgetC'>
                     <table style='width: 100%;' class='modTab'>
@@ -57,7 +65,7 @@ if($Details->getMod() != ""){
                     <tr>
                         <th>Component</th>
                         <th>Sub-Component</th>
-                        <th>Weight</th>
+                        <th>Weight in %</th>
                   </tr>";
                 foreach ($module->getAllComponent() as $f){
                     foreach($f -> getSub() as $g){
@@ -82,7 +90,6 @@ if($Details->getMod() != ""){
                   <h2>Summative Grades</h2>
                 </div>
                 <div class="modal-body" id='summativeBody'>
-                  Test
                 </div>
                 <div class="modal-footer">
                   <h3>Modal Footer</h3>
@@ -116,7 +123,7 @@ if($Details->getMod() != ""){
         </div>
     </body>
     <script type="text/javascript"> 
-//        formativeArray = <?php echo json_encode($formativeArray); ?>;
+        summativeArray = <?php echo json_encode($summativeArray); ?>;
         startDate = <?php echo json_encode($newStartDate); ?>;
         endDate = <?php echo json_encode($newEndDate); ?>;
     </script>

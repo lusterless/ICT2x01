@@ -59,6 +59,11 @@ var span1 = document.getElementsByClassName("close")[2];
 span.onclick = function() {
     modal.style.display = "none";  
     statusModalOpen = false;
+    const summativeBody = document.getElementById("summativeBody");
+    while (summativeBody.firstChild) {
+      summativeBody.removeChild(summativeBody.lastChild);
+    }
+    console.log(1);
  }
 span1.onclick = function() {
     fmodal.style.display = "none";   
@@ -88,16 +93,17 @@ function imginit() {
   ctx.drawImage(img, 0, 170);
 }
 
-function treasureinit() {
+function treasureinit(sub, weight, score, feedback) {
   // future animation code goes here
-  ctx.drawImage(treasure, 50, 130);
+  var no = Math.floor(Math.random()*820) + 1;
+  ctx.drawImage(treasure, no , 130);
     elements.push({
-        x: 50,
+        x: no,
         y: 130,
         sizex: 80,
         sizey: 60,
         clicked: function(){
-            showSummative();
+            showSummative(sub, weight, score, feedback);
         }
     })
 }
@@ -140,8 +146,25 @@ function dinoinit() {
   }
 }
 
-function showSummative(){
+function showSummative(sub, weight, score, feedback){
     modal.style.display = "block";
+    var summativeBody = document.getElementById("summativeBody");
+    var tag = document.createElement("p");
+    var text = document.createTextNode(sub);
+    tag.appendChild(text);  
+    summativeBody.appendChild(tag); 
+    var tag = document.createElement("p");
+    var text = document.createTextNode(weight);
+    tag.appendChild(text);  
+    summativeBody.appendChild(tag);     
+    var tag = document.createElement("p");
+    var text = document.createTextNode(score);
+    tag.appendChild(text);  
+    summativeBody.appendChild(tag); 
+    var tag = document.createElement("p");
+    var text = document.createTextNode(feedback);
+    tag.appendChild(text);  
+    summativeBody.appendChild(tag); 
 }
 
 function showFormative(){
@@ -159,7 +182,10 @@ function showFormative(){
 document.getElementById("gameBody").onload=function(){loadPixel()};
 function loadPixel(){
     imginit();
-    treasureinit();
+    //generate treasure
+    for(var i = 0; i < summativeArray.length; i++){
+        treasureinit(summativeArray[i][0],summativeArray[i][1],summativeArray[i][2],summativeArray[i][3]);
+    }
     streasureinit();
     dinoinit();
     //bininit();

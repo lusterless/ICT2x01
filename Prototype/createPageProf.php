@@ -156,7 +156,7 @@ else{
                  <tr>
                      <th>Component</th>
                      <th>Sub-Component</th>
-                     <th>Weight</th>
+                     <th>Weight in %</th>
                </tr>";
              foreach ($module->getAllComponent() as $f){
                  foreach($f -> getSub() as $g){
