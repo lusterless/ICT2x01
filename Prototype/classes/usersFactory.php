@@ -70,12 +70,14 @@ class usersFactory{
     public static function getSummativeFeedback($conn, $user){
         $id = $user->getUser();
         $summativeComments = $conn->query("SELECT * FROM userSummative WHERE studentid='$id'");
-        while($summativeCrows = $summativeComments->fetch_assoc()){
-            foreach($user->getMod()->getAllComponent() as $c){
-                foreach($c->getSub() as $f){
-                    $subName = $f->getName();
-                    if($subName ==  $summativeCrows["subAssessment_name"]){
-                        $f->giveSummativeFeedback($summativeCrows["summative_feedback"], $summativeCrows["summative_score"]);
+        if($summativeComments->num_rows > 0){
+            while($summativeCrows = $summativeComments->fetch_assoc()){
+                foreach($user->getMod()->getAllComponent() as $c){
+                    foreach($c->getSub() as $f){
+                        $subName = $f->getName();
+                        if($subName ==  $summativeCrows["subAssessment_name"]){
+                            $f->giveSummativeFeedback($summativeCrows["summative_feedback"], $summativeCrows["summative_score"]);
+                        }
                     }
                 }
             }
@@ -86,9 +88,11 @@ class usersFactory{
     public static function getFormativeFeedback($conn, $user){
         $id = $user->getUser();
         $formativeComments = $conn->query("SELECT * FROM userFormative WHERE studentid='$id'");
-        while($formativeRows = $formativeComments->fetch_assoc()){
-            $module = $user->getMod();
-            $module->giveFormativeFeedback($formativeRows["formative_feedback"]);
+        if($formativeComments->num_rows > 0){
+            while($formativeRows = $formativeComments->fetch_assoc()){
+                $module = $user->getMod();
+                $module->giveFormativeFeedback($formativeRows["formative_feedback"]);
+            }
         }
         return $user;
     }
