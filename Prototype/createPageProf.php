@@ -180,7 +180,7 @@ else{
                              <th>Email</th>
                              <th>Phone No.</th>
                              <th>Formative Feedbacks</th>
-                             <th>Summative Feedbacks</th>
+                             <th>Subject</th>
                              <th>Scores</th>
                              <th>Summative Feedback</th>
                        </tr>";
@@ -202,16 +202,22 @@ else{
                 }
                 echo "</select></td>";
                 //subcomponent
-                echo "<td><select class='form-control' name='test' readonly>";
+                echo "<td colspan='3'><select class='form-control' name='test' readonly>";
                 foreach($f->getMod()->getAllComponent() as $comp){
                     foreach($comp->getSub() as $cs){
                         echo "<option>";
                         echo $cs->getName();
+                        if($cs->getScores() != NULL){
+                            echo ", ", $cs->getScores() . ", ";
+                            echo $cs->getSummativeFeedback();
+                        }else{
+                            echo ", No Scores, No Feedbacks";
+                        }
                         echo "</option>";
                     }
                 }
                 echo "</select></td>";
-                echo "</tr>";
+
             }
             echo"   </table>
                 </div>";
