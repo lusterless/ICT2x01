@@ -33,9 +33,18 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         $fb = usersFactory::filterStrings($_POST["feedback"]);
         $sub = usersFactory::filterStrings($_POST["sub"]);
         $score = $_POST["score"];
+        //adapter
+        $studentList = $_SESSION["studentList"];
         foreach($studentChosen as $sc){
             $sc = usersFactory::filterStrings($sc);
             $conn->query("UPDATE userSummative SET summative_score='".$score."', summative_feedback='".$fb."' WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
+            foreach($studentList->SelectByID($sc)->getMod()->getAllComponent() as $c){
+                foreach($c->getSub() as $s){
+                    if($s->getName() == $sub ){
+                        $s->giveSummativeFeedback($fb, $score);
+                    }
+                }
+            }  
         } 
         $msg .= "Feedbacks added successfully";
     }

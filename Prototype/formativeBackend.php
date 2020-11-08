@@ -38,10 +38,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
         foreach($studentChosen as $sc){
             $sc = usersFactory::filterStrings($sc);
             $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$sc."','".$fb."')");
-            $chosenStudent = $studentList->SelectByID($sc); //take ID out
-            $studentList->Remove($sc); //remove old user
-            $chosenStudent->getMod()->giveFormativeFeedback($fb); //giveFormativefeedback;
-            $studentList->Insert($chosenStudent); //put it back inside
+            $studentList->SelectByID($sc)->getMod()->giveFormativeFeedback($fb); //giveFormativefeedback;
         }
         $msg .= "Feedbacks added successfully";
     }

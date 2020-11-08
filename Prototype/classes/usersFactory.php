@@ -58,6 +58,8 @@ class usersFactory{
         while($totalEnrolRow = $totalEnrolResult->fetch_assoc()){
             if($totalEnrolRow["role"] != "professor"){
                 $user = self::createUser($totalEnrolRow, $conn);
+                $user = self::getSummativeFeedback($conn, $user);
+                $user = self::getFormativeFeedback($conn, $user);
                 $studentsList->Insert($user);
             }
         }
