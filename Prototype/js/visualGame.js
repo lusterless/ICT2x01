@@ -186,7 +186,7 @@ function loadPixel(){
     for(var i = 0; i < summativeArray.length; i++){
         treasureinit(summativeArray[i][0],summativeArray[i][1],summativeArray[i][2],summativeArray[i][3]);
     }
-    streasureinit();
+    //streasureinit();
     dinoinit();
     //bininit();
 }

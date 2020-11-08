@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 include "IProfessorGateway.php";
-//dictionary of students of type users
+//List of students enrolled into the module
 class ProfessorDictionaryAdapter implements iProfessorGateway{
-    private $studentList = []; //list of users class variable
+    private $studentList = []; //list of "users" type class variable
     public function Insert($student){$this->studentList[] = $student;}
     public function SelectAll(){return $this->studentList;}
     public function SelectByID($id){
