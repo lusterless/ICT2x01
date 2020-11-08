@@ -172,13 +172,14 @@ else{
              echo "<div class='container' id='studentC'>
                     <table style='width: 100%;' class='modTab'>
                          <tr>
-                             <th colspan='4' style='text-align: center;'>Enrolled Students</th>                            
+                             <th colspan='5' style='text-align: center;'>Enrolled Students</th>                            
                          </tr>
                          <tr>
                              <th>ID</th>
                              <th>Name</th>
                              <th>Email</th>
                              <th>Phone No.</th>
+                             <th>Formative Feedbacks</th>
                        </tr>";
             foreach($studentList->SelectAll() as $f){
                 echo "<tr>";
@@ -186,7 +187,16 @@ else{
                 echo "<td>".$f->getName()."</td>";
                 echo "<td>".$f->getEmail()."</td>";
                 echo "<td>".$f->getTel()."</td>";
-                echo "</tr>";
+                echo "<td><select class='form-control' name='test' readonly>";
+                if(count($f->getMod()->getFormativeFeedback()) > 0){
+                    foreach($f->getMod()->getFormativeFeedback() as $s){
+                        echo "<option>".$s."</option>";
+                    }
+                }
+                else{
+                    echo "<option>No Feedbacks Given</option>";
+                }
+                echo "</select></tr>";
             }
             echo"   </table>
                 </div>";

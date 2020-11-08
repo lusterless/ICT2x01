@@ -50,9 +50,9 @@ class Module implements ifeedback{
     This module class also implements ifeedback interface class. Performs recursive formativeFeedback retrieval as 1 user can have
     more than 1 feedback*/
     public function getFormativeFeedback(){
-        $allFormative = array();
+        $allFormative = [];
         foreach($this->formativeFeedback as $f){
-            $allFormative = array_push($allFormative,$f->getFormativeFeedback());
+            $allFormative[] = $f->getFormativeFeedback();
         }
         return $allFormative;
     }
