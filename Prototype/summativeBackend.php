@@ -38,7 +38,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         $studentList = $_SESSION["studentList"];
         foreach($studentChosen as $sc){
             $sc = usersFactory::filterStrings($sc);
-            $conn->query("UPDATE userSummative SET summative_score='".$score."', summative_feedback='".$fb."' WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
+            $conn->query("UPDATE userSummative SET summative_score='".$score."', summative_feedback='".$fb."', seen='0' WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
             foreach($studentList->SelectByID($sc)->getMod()->getAllComponent() as $c){
                 foreach($c->getSub() as $s){
                     if($s->getName() == $sub ){
