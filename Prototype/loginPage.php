@@ -34,7 +34,7 @@ else{
                 </div>
                 <div style="margin-top: 7px;">
                     <label for="password"><b>Password:</b></label>
-                    <input minlength="8" type="password" placeholder="Enter Password" name="password" required/>
+                    <input minlength="8" maxlength="16" type="password" placeholder="Enter Password" name="password" required/>
                 </div>
                 <div>
                     <input type='hidden' name='login' value='login'>

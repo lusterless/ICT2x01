@@ -30,12 +30,14 @@ if($Details->getMod() != ""){
     $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];
     foreach ($module->getAllComponent() as $f){
         foreach($f -> getSub() as $g){
-            $tempArray = [];
-            $tempArray[] = $g->getName();
-            $tempArray[] = $g->getWeight();
-            $tempArray[] = $g->getScores();
-            $tempArray[] = $g->getSummativeFeedback();
-            $summativeArray[] = $tempArray;
+            if($g->getScores() != null && $g->getSummativeFeedback() != null){
+                $tempArray = [];
+                $tempArray[] = $g->getName();
+                $tempArray[] = $g->getWeight();
+                $tempArray[] = $g->getScores();
+                $tempArray[] = $g->getSummativeFeedback();
+                $summativeArray[] = $tempArray;
+            }
         }
     }
 }

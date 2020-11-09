@@ -15,6 +15,11 @@ include_once "sqlConnection.php";
 $username = usersFactory::filterStrings($_POST["username"]);
 $password = usersFactory::filterStrings($_POST["password"]);
 $errormsg = "";
+if(strlen($password) < 8){
+    $errormsg .= "Please enter a password of minimum 8 characters<br>";
+}
+
+
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
     if ($conn->connect_error)
     {
@@ -59,7 +64,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
                 else{
                     $count = $row["count"] += 1;
                     $conn->query("UPDATE users SET count='$count' WHERE email='$username'");
-                    $errormsg = "Incorrect Password";
+                    $errormsg .= "Incorrect Username/Password";
                 }
                 session_start();
                 $_SESSION["errormsg"] = $errormsg;
