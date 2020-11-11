@@ -63,7 +63,6 @@ span.onclick = function() {
     while (summativeBody.firstChild) {
       summativeBody.removeChild(summativeBody.lastChild);
     }
-    console.log(1);
  }
 span1.onclick = function() {
     fmodal.style.display = "none";   
@@ -93,9 +92,8 @@ function imginit() {
   ctx.drawImage(img, 0, 170);
 }
 
-function treasureinit(sub, weight, score, feedback) {
+function treasureinit(sub, weight, score, feedback, no) {
   // future animation code goes here
-  var no = Math.floor(Math.random()*820) + 1;
   ctx.drawImage(treasure, no , 130);
     elements.push({
         x: no,
@@ -150,19 +148,20 @@ function showSummative(sub, weight, score, feedback){
     modal.style.display = "block";
     var summativeBody = document.getElementById("summativeBody");
     var tag = document.createElement("p");
-    var text = document.createTextNode(sub);
+    var text = document.createTextNode("Subject: " + sub);
     tag.appendChild(text);  
     summativeBody.appendChild(tag); 
     var tag = document.createElement("p");
-    var text = document.createTextNode(weight);
+    var text = document.createTextNode("Weightage: " + weight + "%");
     tag.appendChild(text);  
     summativeBody.appendChild(tag);     
     var tag = document.createElement("p");
-    var text = document.createTextNode(score);
+    var newScore = (score/100) * weight;
+    var text = document.createTextNode("Score: " + newScore + "%");
     tag.appendChild(text);  
     summativeBody.appendChild(tag); 
     var tag = document.createElement("p");
-    var text = document.createTextNode(feedback);
+    var text = document.createTextNode("Feedback: " + feedback);
     tag.appendChild(text);  
     summativeBody.appendChild(tag); 
 }
@@ -183,8 +182,10 @@ document.getElementById("gameBody").onload=function(){loadPixel()};
 function loadPixel(){
     imginit();
     //generate treasure
-    for(var i = 0; i < summativeArray.length; i++){
-        treasureinit(summativeArray[i][0],summativeArray[i][1],summativeArray[i][2],summativeArray[i][3]);
+    var distance = 820 / summativeArray.length;
+    console.log(summativeArray.length);
+    for(var i = 1; i <= summativeArray.length; i++){
+        treasureinit(summativeArray[i-1][0],summativeArray[i-1][1],summativeArray[i-1][2],summativeArray[i-1][3], distance * i);
     }
     //streasureinit();
     dinoinit();

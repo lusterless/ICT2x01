@@ -93,8 +93,8 @@ if($Details->getMod() != ""){
                 </div>
                 <div class="modal-body" id='summativeBody'>
                 </div>
-                <div class="modal-footer">
-                  <h3>Modal Footer</h3>
+                <div class="modal-footer" style="text-align: center;">
+                  <p>© 2013 - Singapore Institute of Technology</p>
                 </div>
             </div>
         </div>
@@ -118,8 +118,8 @@ if($Details->getMod() != ""){
                         }
                     ?>
                 </div>
-                <div class="modal-footer">
-                  <h3>Modal Footer</h3>
+                <div class="modal-footer" style="text-align: center;">
+                  <p>© 2013 - Singapore Institute of Technology</p>
                 </div>
             </div>
         </div>
