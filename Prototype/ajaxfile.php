@@ -84,9 +84,7 @@ if ($request == 1) {
     $assessmentid = $data->assessmentid;
     $subassessmentname = $data->subassessmentname;
     $student = $data->student;
-    $dataprobe = mysqli_query($conn, "SELECT * FROM userSummative");
-    $summativeid = mysqli_num_rows($dataprobe) + 1;
-    mysqli_query($conn, "INSERT INTO userSummative(summativeid, studentid,subAssessment_name) VALUES('" . $summativeid . "','" . $student . "','" . $subassessmentname . "')");
+    mysqli_query($conn, "INSERT INTO userSummative(studentid,subAssessment_name) VALUES('" . $student . "','" . $subassessmentname . "')");
 #$Details->setMod($module);
     exit;
 } else if ($request == 6) {
