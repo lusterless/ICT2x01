@@ -28,9 +28,13 @@ if (!isset($_SESSION['sessionInfo'])) {
             header("Location:loginPage.php");
         } else {
             echo '<h2>success</h2>';
-            $module = usersFactory::getModuleInfo($conn, '1');
+            $name = $Details->getName();
+            $result = mysqli_query($conn, "SELECT module FROM users WHERE name='".$name."'");
+            $row = mysqli_fetch_row($result);
+            $moduleid=$row[0];
+            $module = usersFactory::getModuleInfo($conn, $moduleid);
             $Details->setMod($module);
-            $studentList = usersFactory::getAllEnrollStudents($conn, '1');
+            $studentList = usersFactory::getAllEnrollStudents($conn, $moduleid);
             $_SESSION["studentList"] = $studentList;
             header("Location:createPageProf.php");
             echo "<script src='" . js / createPageProf . js . "'></script>";

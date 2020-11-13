@@ -5,10 +5,12 @@ var app = new Vue({
         errors: [],
         step: 1,
         module: null,
+        currentdate:null,
         startdate: null,
         enddate: null,
         fileName: "",
         students: [],
+        moduleno: null,
         database: "",
         csvfile: null,
         categories: ["CA", "Exam", "CT"],
@@ -29,24 +31,48 @@ var app = new Vue({
     methods: {
         async nextStep() {
             this.errors = [];
+            var today = new Date();
+            var date = today.toJSON().slice(0, 10); 
+            this.currentdate = date.slice(0, 4) + '-'  
+                       + date.slice(5, 7) + '-'  
+                       + date.slice(8, 10); 
             switch (this.step) {
                 case 1:
                     if (!this.module) {
                         this.addError("Module name required!");
                     }
-                    if (!this.startdate) {
+                    else if (this.module.length < 5) {
+                        this.addError("Module name cannot be lesser than 5 characters");
+                    }
+                    else if (this.module.length > 50) {
+                        this.addError("Module name cannot be more than 50 characters");
+                    }
+                    else if (!this.startdate) {
                         this.addError("Start date required!");
                     }
-                    if (!this.enddate) {
+                    else if (!this.enddate) {
                         this.addError("End date required!");
                     }
-                    if (this.enddate < this.startdate) {
+                    else if (this.startdate < this.currentdate) {
+                        this.addError("Start date cannot be in the past!");
+                    }
+                    else if (this.enddate < this.currentdate) {
+                        this.addError("End date cannot be in the past!");
+                    }
+                    else if (this.enddate < this.startdate) {
                         this.addError("End date cannot be earlier than start date!");
                     }
                     break;
                 case 2:
                     if (this.assessments.length > 0) {
                         this.checkAssessments();
+                        await axios.post("ajaxfile.php", {
+                            request: 7,
+                            moduleno: this.moduleno
+                        }).then((response) => {
+                            var res = response.data.split("\n");
+                            this.moduleno = res.pop();
+                        });
                     }
                     break;
                 case 3:
@@ -109,14 +135,16 @@ var app = new Vue({
                     module: this.module,
                     startdate: this.startdate,
                     enddate: this.enddate,
-                    assessment: this.assessments
+                    assessment: this.assessments,
+                    moduleno: this.moduleno
                 })
                 for (i = 0; i < this.assessments.length; i++) {
                     axios.post('ajaxfile.php', {
                         request: 2,
                         assessmentid: i + 1,
                         category: this.assessments[i].category,
-                        assessmentweightage: this.assessments[i].weightage
+                        assessmentweightage: this.assessments[i].weightage,
+                        moduleno: this.moduleno
                     })
                 }
                 for (i = 0; i < this.assessments.length; i++) {
@@ -125,14 +153,16 @@ var app = new Vue({
                             request: 3,
                             assessmentid: i + 1,
                             subassessmentname: this.assessments[i].subAssessments[j].name,
-                            subassessmentweightage: this.assessments[i].subAssessments[j].weightage
+                            subassessmentweightage: this.assessments[i].subAssessments[j].weightage,
+                            moduleno: this.moduleno
                         })
                     }
                 }
                 for (i = 0; i < this.students.length; i++) {
                     axios.post('ajaxfile.php', {
                         request: 4,
-                        student: this.students[i]
+                        student: this.students[i],
+                        moduleno: this.moduleno
                     })
                 }
 //location.reload();
@@ -144,7 +174,8 @@ var app = new Vue({
                                 request: 5,
                                 assessmentid: i + 1,
                                 subassessmentname: this.assessments[i].subAssessments[j].name,
-                                student: this.students[k]
+                                student: this.students[k],
+                                moduleno: this.moduleno
                             })
                         }
                     }
@@ -186,6 +217,7 @@ var app = new Vue({
         checkAssessments() {
             let selectedCategories = new Set();
             let currentTotalWeightage = 0;
+            if (this.assessments.length > 0) {
             this.assessments.forEach((assessment) => {
 // Check assessment categories
                 !!assessment.category
@@ -211,12 +243,13 @@ var app = new Vue({
                             );
                 }
             });
+        }
 // Check for unique assessment categories
             if (selectedCategories.size !== this.assessments.length) {
                 this.addError("Please choose unique categories for all assessments");
             }
 // Check assessment weightages
-            if (currentTotalWeightage !== eval(this.totalWeightage)) {
+            else if (currentTotalWeightage !== eval(this.totalWeightage)) {
                 this.addError(
                         `The total weightage for all assessments must equal to ${this.totalWeightage}`
                         );

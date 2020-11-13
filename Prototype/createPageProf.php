@@ -99,9 +99,6 @@ else{
                 <div>
                   <h1>Add Students to Module</h1>
                   <br>
-                  {{ step }}
-                  {{ students.length }}
-                  {{ errors.length }}
                     <input type="file" v-on:change="handleUpload" accept=".csv"/>
                     <div v-if="students.length != 0" v-for="student in students">
                         id: {{ student}}
