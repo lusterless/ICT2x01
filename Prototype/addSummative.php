@@ -28,6 +28,8 @@ $module = $Details->getMod();
     <title>Update Record</title>
     <link rel="stylesheet" href="css/feedbacks.css">    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
 </head>
     <?php include('navBar.php');?>
     <div class="wrapper">
@@ -64,14 +66,19 @@ $module = $Details->getMod();
                         </div>
                         <div class="form-group">
                             <label>Score</label>
-                            <input type="number" name="score" class="form-control" required>
+                            <input type="number" name="score" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Feedback</label>
-                            <textarea name="feedback" class="form-control" required></textarea>
+                            <textarea name="feedback" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
                         </div>
+                        <div class="form-group">
+                            <label>Import Feedback</label>
+                            <input type="file" onchange="return fileValidation()" id="summativeFile" name="summativeFile" accept=".xls,.xlsx"/>
+                        </div>
+                        <input type="hidden" id="sarrayFeedback" name="sarrayFeedback" value="">
                         <input type='hidden' name='summativePage' value='summativePage'>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
@@ -88,6 +95,35 @@ $module = $Details->getMod();
     </div>
 </body>
 </html>
+
+<script>
+function fileValidation(){
+    var fileInput = document.getElementById("summativeFile");
+    var filePath = fileInput.value;
+    var allowedExtensions =  /(\.xlsx|\.xls)$/i;
+
+    if (!allowedExtensions.exec(filePath)){
+        alert("Please insert a valid file type \n\n .xls, .xlsx");
+        fileInput.value = "";
+        document.getElementById('sarrayFeedback').value = "";
+        return false;
+    }else{
+        if(fileInput.files && fileInput.files[0]){
+                var reader = new FileReader();
+                reader.onload=function(e){
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, {type: 'array'});
+                    var firstSheet = workbook.Sheets[workbook.SheetNames[0]];                       
+                    var result = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    document.getElementById('sarrayFeedback').value = JSON.stringify(result);
+                    var element = document.getElementById('sarrayFeedback').value;
+                    console.log(element);
+                }
+                reader.readAsArrayBuffer(fileInput.files[0]);
+        }
+    }
+}
+</script>
 
 <?php
 unset($_SESSION["msg"]);

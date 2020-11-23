@@ -71,6 +71,11 @@ else{
     if($_POST["feedback"] == ""){
         $msg .= "<p>Please enter a valid feedback.</p>";
     }
+    
+    if(!isset($_POST['arrayFeedback']) || $_POST['arrayFeedback']==""){
+        $msg .= "<p>Alternatively, you may insert a file.</p>";
+    }
+    
     $_SESSION["msg"] = $msg;
     header("Location:addFormative.php");
 }

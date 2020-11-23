@@ -24,8 +24,9 @@ else{
     }
 }
 
+$msg = "";
 //summativeFeedback
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_POST["score"]) && $_POST["score"] >= 0 && $_POST["score"] <= 100) && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["summativePage"])) {
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_POST["score"]) && $_POST["score"] >= 0 && $_POST["score"] <= 100) && isset($_POST["studentList"]) && (isset($_POST["feedback"]) && $_POST["feedback"]) != "" && isset($_POST["summativePage"])) {
     if ($conn->connect_error){
         $msg .= "Database Error\n";
     }else{
@@ -51,18 +52,52 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
     }
     $_SESSION["msg"] = $msg;
     header("Location:addSummative.php");
-}else{
+}elseif($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['sarrayFeedback']) && $_POST['sarrayFeedback']!="" && isset($_POST["summativePage"])&& isset($_POST["sub"]) ){
+    //import via files
+    if ($conn->connect_error){
+        $msg .= "Database Error\n";
+    }else{
+        $information = json_decode($_POST['sarrayFeedback'], true);
+        //adapter
+        $sub = usersFactory::filterStrings($_POST["sub"]);
+        $studentList = $_SESSION["studentList"];
+        //insert into db
+        foreach($information as $sf){
+            $parafirst = usersFactory::filterStrings($sf[0]); //id
+            $parasec = usersFactory::filterStrings($sf[1]);    //fb
+            $parathird = usersFactory::filterStrings($sf[2]);  //score
+            var_dump($parafirst);
+            $conn->query("UPDATE userSummative SET summative_score='".$parathird."', summative_feedback='".$parasec."', seen='0' WHERE studentid='".$parafirst."' AND subAssessment_name='".$sub."'");
+            foreach($studentList->SelectByID($parafirst)->getMod()->getAllComponent() as $c){
+                foreach($c->getSub() as $s){
+                    if($s->getName() == $sub ){
+                        $s->giveSummativeFeedback($parasec, $parathird);
+                    }
+                }
+            } 
+            
+        }
+        $msg .= "Files Feedbacks added successfully";
+    }
+    $_SESSION["msg"] = $msg;
+    header("Location:addSummative.php");
+}
+else{
     if(!isset($_POST["studentList"])){
-        $msg .= "Please choose at least 1 students.\n";
+        $msg .= "<p>Please choose at least 1 students.</p>";
     }
-    if(!isset($_POST["feedback"])){
-        $msg .= "Please enter a valid feedback.\n";
+    if($_POST["feedback"] == ""){
+        $msg .= "<p>Please enter a valid feedback.</p>";
     }
-    if(!isset($_POST["score"])){
-        $msg .= "Please enter a valid score.\n";
+    if(!isset($_POST["score"]) || $_POST["score"] == ""){
+        $msg .= "<p>Please enter a valid score.</p>";
     }
     if($_POST["score"] < 0 || $_POST["score"] > 100){
-        $msg .= "Score entered Out of Range.\n";
+        $msg .= "<p>Score entered Out of Range.</p>";
+    }
+    
+    if(!isset($_POST['sarrayFeedback']) || $_POST['sarrayFeedback']==""){
+        $msg .= "<p>Alternatively, you may insert a file.</p>";
     }
     $_SESSION["msg"] = $msg;
     header("Location:addSummative.php");
