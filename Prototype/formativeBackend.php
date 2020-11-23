@@ -46,20 +46,36 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
     header("Location:addFormative.php");
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['arrayFeedback']) && $_POST['arrayFeedback']!="" && isset($_POST["formativePage"])) {
     //import via files
+    $checkerror = false;
     if ($conn->connect_error){
         $msg .= "Database Error\n";
     }else{
         $information = json_decode($_POST['arrayFeedback'], true);
         //adapter
         $studentList = $_SESSION["studentList"];
-        //insert into db
+        //check if students exist
         foreach($information as $sf){
             $parafirst = usersFactory::filterStrings($sf[0]);
-            $parasec = usersFactory::filterStrings($sf[1]);    
-            $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$parasec."')");
-            $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($parasec); //giveFormativefeedback;            
+            $parasec = usersFactory::filterStrings($sf[1]); 
+            if($studentList->SelectByID($parafirst) == false){
+                $checkerror = true;
+                $msg .= "<p>ID ". $parafirst . " Error</p>";
+            }elseif($parasec == null){
+                $checkerror = true;
+                $msg .= "<p>ID ". $parafirst . " cannot have empty feedback</p>";
+            }
         }
-        $msg .= "Files Feedbacks added successfully";
+        //insert to DB
+        if($checkerror == false){
+            foreach($information as $sf){
+                $parafirst = usersFactory::filterStrings($sf[0]);
+                $parasec = usersFactory::filterStrings($sf[1]); 
+                $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$parasec."')");
+                $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($parasec); //giveFormativefeedback;            
+            }
+            $msg .= "Files Feedbacks added successfully";
+        }
+        
     }
     $_SESSION["msg"] = $msg;
     header("Location:addFormative.php");

@@ -19,7 +19,11 @@ class ProfessorDictionaryAdapter implements iProfessorGateway{
                 break;
             }
         }
-        return $user;
+        if($user == ""){
+            return false;
+        }else{
+            return $user;
+        }
     }
     public function Remove($id){
         foreach($this->studentList as $s){
