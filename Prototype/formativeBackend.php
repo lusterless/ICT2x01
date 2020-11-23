@@ -25,7 +25,7 @@ else{
 
 //formativeFeedback
 $msg = "";
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["formativePage"])) {
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["formativePage"]) && $_POST["feedback"] != "") {
     if ($conn->connect_error){
         $msg .= "Database Error\n";
     }else{
@@ -44,12 +44,32 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
     }
     $_SESSION["msg"] = $msg;
     header("Location:addFormative.php");
-}else{
-    if(!isset($_POST["studentList"])){
-        $msg .= "Please choose at least 1 students.\n";
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['arrayFeedback']) && $_POST['arrayFeedback']!="" && isset($_POST["formativePage"])) {
+    //import via files
+    if ($conn->connect_error){
+        $msg .= "Database Error\n";
+    }else{
+        $information = json_decode($_POST['arrayFeedback'], true);
+        //adapter
+        $studentList = $_SESSION["studentList"];
+        //insert into db
+        foreach($information as $sf){
+            $parafirst = usersFactory::filterStrings($sf[0]);
+            $parasec = usersFactory::filterStrings($sf[1]);    
+            $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$parasec."')");
+            $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($parasec); //giveFormativefeedback;            
+        }
+        $msg .= "Files Feedbacks added successfully";
     }
-    if(!isset($_POST["feedback"])){
-        $msg .= "Please enter a valid feedback.\n";
+    $_SESSION["msg"] = $msg;
+    header("Location:addFormative.php");
+}
+else{
+    if(!isset($_POST["studentList"])){
+        $msg .= "<p>Please choose at least 1 students.<p>";
+    }
+    if($_POST["feedback"] == ""){
+        $msg .= "<p>Please enter a valid feedback.</p>";
     }
     $_SESSION["msg"] = $msg;
     header("Location:addFormative.php");

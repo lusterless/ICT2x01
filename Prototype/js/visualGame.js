@@ -17,16 +17,22 @@ d = n.getDate();
 //Temporary generate date MM-DD-YYYY
 var x = new Date(startDate);  //start module date
 var y = new Date(endDate);  //end module date
-//var x = new Date(module.getStart());
-//var y = new Date(module.getEnd());
-const diffTime = Math.abs(y - x);
-const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-//calculate difference = how many pixels
-var portion = Math.floor(820 / diffDays);
+var daysdiff = 0;
+var portion = 0;
 
-//calculate number of days from original start date of module: current date - start date
-const timediff = Math.abs(n - x);
-const daysdiff = Math.ceil(timediff / (1000 * 60 * 60 * 24));
+if(n > x){
+    //var x = new Date(module.getStart());
+    //var y = new Date(module.getEnd());
+    const diffTime = Math.abs(y - x);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    //calculate difference = how many pixels
+    portion = Math.floor(820 / diffDays);
+
+    //calculate number of days from original start date of module: current date - start date
+    const timediff = Math.abs(n - x);
+    daysdiff = Math.ceil(timediff / (1000 * 60 * 60 * 24));
+}
+
 
 
 //DECLARATIoN
