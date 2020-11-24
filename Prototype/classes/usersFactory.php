@@ -76,7 +76,7 @@ class usersFactory{
                     foreach($c->getSub() as $f){
                         $subName = $f->getName();
                         if($subName ==  $summativeCrows["subAssessment_name"]){
-                            $f->giveSummativeFeedback($summativeCrows["summative_feedback"], $summativeCrows["summative_score"]);
+                            $f->giveSummativeFeedback($summativeCrows["summative_feedback"], $summativeCrows["summative_score"], $summativeCrows["seen"]);
                         }
                     }
                 }

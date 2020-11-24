@@ -7,6 +7,7 @@
 
 
 statusModalOpen = false;
+console.log(summativeArray[0][4]);
 
 //current Date for tracking
 var n =  new Date(); //current date
@@ -65,10 +66,11 @@ var span1 = document.getElementsByClassName("close")[2];
 span.onclick = function() {
     modal.style.display = "none";  
     statusModalOpen = false;
-    const summativeBody = document.getElementById("summativeBody");
-    while (summativeBody.firstChild) {
-      summativeBody.removeChild(summativeBody.lastChild);
-    }
+//    const summativeBody = document.getElementById("summativeBody");
+//    while (summativeBody.firstChild) {
+//      summativeBody.removeChild(summativeBody.lastChild);
+//    }
+    location.reload();
  }
 span1.onclick = function() {
     fmodal.style.display = "none";   
@@ -98,7 +100,7 @@ function imginit() {
   ctx.drawImage(img, 0, 170);
 }
 
-function treasureinit(sub, weight, score, feedback, no) {
+function treasureinit(sub, weight, score, feedback, no, studentid) {
   // future animation code goes here
   ctx.drawImage(treasure, no , 130);
     elements.push({
@@ -107,14 +109,24 @@ function treasureinit(sub, weight, score, feedback, no) {
         sizex: 80,
         sizey: 60,
         clicked: function(){
-            showSummative(sub, weight, score, feedback);
+            showSummative(sub, weight, score, feedback, studentid);
         }
     })
 }
 
-function streasureinit() {
+function streasureinit(sub, weight, score, feedback, no, studentid) {
   // future animation code goes here
-  ctx.drawImage(streasure, 130, 110);
+  // future animation code goes here
+  ctx.drawImage(streasure, no , 110);
+    elements.push({
+        x: no,
+        y: 130,
+        sizex: 80,
+        sizey: 60,
+        clicked: function(){
+            showSummative(sub, weight, score, feedback, studentid);
+        }
+    })
 }
 /*
 function bininit(){
@@ -150,7 +162,8 @@ function dinoinit() {
   }
 }
 
-function showSummative(sub, weight, score, feedback){
+function showSummative(sub, weight, score, feedback, studentid){
+    //prompt modal
     modal.style.display = "block";
     var summativeBody = document.getElementById("summativeBody");
     var tag = document.createElement("p");
@@ -162,7 +175,7 @@ function showSummative(sub, weight, score, feedback){
     tag.appendChild(text);  
     summativeBody.appendChild(tag);     
     var tag = document.createElement("p");
-    var newScore = (score/100) * weight;
+    var newScore = Math.floor((score/100) * weight);
     var text = document.createTextNode("Score: " + newScore + "%");
     tag.appendChild(text);  
     summativeBody.appendChild(tag); 
@@ -170,30 +183,42 @@ function showSummative(sub, weight, score, feedback){
     var text = document.createTextNode("Feedback: " + feedback);
     tag.appendChild(text);  
     summativeBody.appendChild(tag); 
+    
+    //update database value
+    $.ajax({
+        url: 'updateSeen.php',
+        type: 'POST',
+        data: {studentid: studentid, sub: sub},
+        success: function(data){
+            //update array seen value
+        }
+    });
+    
+    //delete and reload canvas
+//    var oldcanv = document.getElementById('interactiveCanvas');
+//    ctx.clearRect(0,0, oldcanv.width, oldcanv.height);
+//    elements = [];
+//    loadPixel();
 }
 
 function showFormative(){
     fmodal.style.display = "block";
-//    var formativeBody = document.getElementById("formativeBody");
-//    for (var i = 0; i < formativeArray.length; i++) {
-//        var tag = document.createElement("p");
-//        var text = document.createTextNode(formativeArray[i]);
-//        tag.appendChild(text);  
-//        formativeBody.appendChild(tag);
-//    }
 }
 
 
 document.getElementById("gameBody").onload=function(){loadPixel()};
+
 function loadPixel(){
     imginit();
     //generate treasure
-    var distance = 820 / summativeArray.length;
-    console.log(summativeArray.length);
+    var distance = 805 / summativeArray.length;
     for(var i = 1; i <= summativeArray.length; i++){
-        treasureinit(summativeArray[i-1][0],summativeArray[i-1][1],summativeArray[i-1][2],summativeArray[i-1][3], distance * i);
+        //if unseen
+        if(summativeArray[i-1][4] == 0){
+            streasureinit(summativeArray[i-1][0],summativeArray[i-1][1],summativeArray[i-1][2],summativeArray[i-1][3], distance * i, summativeArray[i-1][5]);
+        }else{
+            treasureinit(summativeArray[i-1][0],summativeArray[i-1][1],summativeArray[i-1][2],summativeArray[i-1][3], distance * i, summativeArray[i-1][5]);
+        }
     }
-    //streasureinit();
     dinoinit();
-    //bininit();
 }

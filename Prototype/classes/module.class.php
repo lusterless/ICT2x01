@@ -38,8 +38,10 @@ class Module implements ifeedback{
     public function getAllComponent(){return $this->components;}
     //ifeedback interface
     public function getScores(){throw new Exception("Not implemented");}
+    public function getSeen(){throw new Exception("Not implemented");}
+    public function giveSeen($seen){throw new Exception("Not implemented");}
     public function giveScores($scores){throw new Exception("Not implemented");}
-    public function giveSummativeFeedback($feedback, $scores){throw new Exception("Not implemented");}
+    public function giveSummativeFeedback($feedback, $scores, $seen){throw new Exception("Not implemented");}
     public function getSummativeFeedback(){throw new Exception("Not implemented");}
     public function giveFormativeFeedback($feedback){
         $fb = new formativeFeedbacks($feedback);
@@ -85,12 +87,14 @@ class subComponent implements ifeedback{
     public function getName(){return $this->subComponentName;}
     public function getWeight(){return $this->subComponentWeight;}
     //ifeedback
-    public function giveSummativeFeedback($feedback, $scores){
-        $summative = new summativeFeedbacks($feedback, $scores);
+    public function giveSummativeFeedback($feedback, $scores, $seen){
+        $summative = new summativeFeedbacks($feedback, $scores, $seen);
         $this->summativeFeedback = $summative;
     }
     public function getSummativeFeedback(){return $this->summativeFeedback->getSummativeFeedback();}
     public function getScores(){return $this->summativeFeedback->getScores();}
+    public function getSeen(){return $this->summativeFeedback->getSeen();}
+    public function giveSeen($seen){$this->summativeFeedback->giveSeen($seen);}
     public function giveFormativeFeedback($feedback){throw new Exception("Not implemented");}
     public function getFormativeFeedback(){throw new Exception("Not implemented");}
     public function giveScores($scores){throw new Exception("Not implemented");}

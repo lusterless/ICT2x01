@@ -36,6 +36,8 @@ if($Details->getMod() != ""){
                 $tempArray[] = $g->getWeight();
                 $tempArray[] = $g->getScores();
                 $tempArray[] = $g->getSummativeFeedback();
+                $tempArray[] = $g->getSeen();
+                $tempArray[] = $Details->getUser();
                 $summativeArray[] = $tempArray;
             }
         }

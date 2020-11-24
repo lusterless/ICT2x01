@@ -55,14 +55,19 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
         $studentList = $_SESSION["studentList"];
         //check if students exist
         foreach($information as $sf){
-            $parafirst = usersFactory::filterStrings($sf[0]);
-            $parasec = usersFactory::filterStrings($sf[1]); 
+            $parafirst = $sf[0];
+            $parasec = $sf[1]; 
             if($studentList->SelectByID($parafirst) == false){
                 $checkerror = true;
-                $msg .= "<p>ID ". $parafirst . " Error</p>";
-            }elseif($parasec == null){
-                $checkerror = true;
-                $msg .= "<p>ID ". $parafirst . " cannot have empty feedback</p>";
+                $msg .= "<p>ID ". $parafirst . " does not exist or is not enrolled in this module currently</p>";
+            }else{
+                if($parasec == null){
+                    $checkerror = true;
+                    $msg .= "<p>ID ". $parafirst . " cannot have empty feedback</p>";
+                }elseif(is_string($parasec)==false){
+                    $checkerror = true;
+                    $msg .= "<p>ID ". $parafirst . " is not a valid feedback</p>";
+                }
             }
         }
         //insert to DB

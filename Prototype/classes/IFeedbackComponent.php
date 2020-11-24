@@ -7,10 +7,12 @@
  */
 
 interface ifeedback{
+    public function getSeen();
+    public function giveSeen($seen);
     public function getScores();
     public function giveScores($scores);
     public function giveFormativeFeedback($feedback);
     public function getFormativeFeedback();
-    public function giveSummativeFeedback($feedback, $score);
+    public function giveSummativeFeedback($feedback, $score, $seen);
     public function getSummativeFeedback();
 }
