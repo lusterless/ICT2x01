@@ -70,7 +70,7 @@ span.onclick = function() {
 //    while (summativeBody.firstChild) {
 //      summativeBody.removeChild(summativeBody.lastChild);
 //    }
-    location.reload();
+    location.reload(true);
  }
 span1.onclick = function() {
     fmodal.style.display = "none";   
