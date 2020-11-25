@@ -52,9 +52,9 @@ else{
               <!-- Create a Module -->
               <div v-if="step === 1">
                 <h1>Create a Module</h1>
-                <br>Module Name: <input placeholder="Module name" v-model="module" />
-                <br>Module Start date: <input type="date" v-model="startdate" />
-                <br>Module End date: <input type="date" v-model="enddate" />
+                <br>Module Name: <input placeholder="Module name" v-model="module" required />
+                <br>Module Start date: <input type="date" v-model="startdate" required />
+                <br>Module End date: <input type="date" v-model="enddate" required />
                 <button type="button" @click="nextStep">Next</button>
               </div>
               <!-- Add Assessment for Module -->
@@ -67,7 +67,7 @@ else{
                       <option disabled value="">Please select one</option>
                       <option v-for="category in categories">{{ category }}</option>
                     </select>
-                    <input type="text" v-model="assessment.weightage" />
+                    <input type="text" v-model="assessment.weightage" required />
                     <button type="button"v-show="assessments.length > 1" @click="removeAssessment(index)">
                       Remove Assessment
                     </button>
@@ -76,8 +76,8 @@ else{
 
                     <h3>Sub-assessments for Assessment {{ index + 1 }}</h3>
                     <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
-                      <input type="text" v-model="subAssessment.name" />
-                      <input type="text" v-model="subAssessment.weightage" />
+                      <input type="text" v-model="subAssessment.name" required />
+                      <input type="text" v-model="subAssessment.weightage" required />
                       <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button> 
                       <button type="button" v-show="assessment.subAssessments.length > 1" @click="removeSubAssessment(index, subIndex)">
                         Remove Subassessment
@@ -99,7 +99,7 @@ else{
                 <div>
                   <h1>Add Students to Module</h1>
                   <br>
-                    <input type="file" v-on:change="handleUpload" accept=".csv"/>
+                    <input type="file" v-on:change="handleUpload" accept=".csv" required />
                     <div v-if="students.length != 0" v-for="student in students">
                         id: {{ student}}
                     </div>

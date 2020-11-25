@@ -97,7 +97,7 @@ if ($request == 1) {
             $queryString = "${queryString},";
         }
     }
-    $result = mysqli_query($conn, "SELECT studentid FROM users WHERE users.studentid IN (" . $queryString . ")");
+    $result = mysqli_query($conn, "SELECT studentid FROM users WHERE users.studentid IN (" . $queryString . ") AND module IS NULL");
     if ($result) {
         $num_rows = mysqli_num_rows($result);
         echo $num_rows;
