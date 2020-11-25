@@ -7,7 +7,6 @@
 
 
 statusModalOpen = false;
-console.log(summativeArray[0][4]);
 
 //current Date for tracking
 var n =  new Date(); //current date
