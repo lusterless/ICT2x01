@@ -9,6 +9,7 @@
 include "classes/users.class.php";
 include "classes/module.class.php";
 include "classes/deleteFactory.php";
+include_once "classes/ProfessorDictionaryAdapter.php";
 include_once "sqlConnection.php";
 
 session_start();
@@ -27,7 +28,8 @@ else{
             //insert error msg here
             header("Location:manageModule.php");
         }else{
-            deleteFactory::clearAll($conn, $Details->getMod()->getNumber());
+            $studentList = $_SESSION["studentList"];
+            deleteFactory::clearAll($conn, $Details->getMod()->getNumber(), $studentList->SelectAll());
             //delete module from session = delete components = delete subcomponents
             $Details->setMod("");
             header("Location:createPageProf.php");

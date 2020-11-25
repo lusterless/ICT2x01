@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-
+    
 <?php
 include "classes/users.class.php";
 
-// session_start();
-// $Details = "";
-// if (isset($_SESSION['sessionInfo'])) {
-//     $Details = $_SESSION['sessionInfo'];
-//     if($Details->getRole()=="student")
-//         header("Location:visualGame.php");
-//     else
-//         header("Location:createPageProf.php");
-// }
-// else{
-//     unset($_SESSION["sessionInfo"]);
-//     session_destroy();
-// }
-// ?>
+session_start();
+$Details = "";
+if (isset($_SESSION['sessionInfo'])) {
+    $Details = $_SESSION['sessionInfo'];
+    if($Details->getRole()=="student")
+        header("Location:visualGame.php");
+    else
+        header("Location:createPageProf.php");
+}
+else{
+    unset($_SESSION["sessionInfo"]);
+    session_destroy();
+}
+?>
 
 <html lang="en">
     <head>
@@ -34,9 +34,10 @@ include "classes/users.class.php";
                 </div>
                 <div style="margin-top: 7px;">
                     <label for="password"><b>Password:</b></label>
-                    <input minlength="8" type="password" placeholder="Enter Password" name="password" required/>
+                    <input minlength="8" maxlength="16" type="password" placeholder="Enter Password" name="password" required/>
                 </div>
                 <div>
+                    <input type='hidden' name='login' value='login'>
                     <button type="submit" class="loginBtn">Login</button>
                 </div>
             </form>
@@ -48,3 +49,7 @@ include "classes/users.class.php";
         </div>
     </body>
 </html>
+
+<?php
+unset($_SESSION["errormsg"]);
+?>

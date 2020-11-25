@@ -29,7 +29,7 @@ and open the template in the editor.
 #widgetC{
     border-radius: 25px;  
     width: 50%;
-    padding: 30px 70px 70px 70px;
+    padding: 30px 70px 30px 70px;
     background-color: #f6f7f8;
     margin-top: 50px;
 }

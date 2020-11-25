@@ -8,6 +8,7 @@ and open the template in the editor.
 <?php
 include "classes/users.class.php";
 include "classes/module.class.php";
+include "classes/ProfessorDictionaryAdapter.php";
 
 session_start();
 $Details = "";
@@ -30,8 +31,7 @@ else{
     <title>Create a module</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">   
-    <link rel="stylesheet" type="text/css" href="css/createPageProf.css">
+    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
@@ -50,17 +50,12 @@ else{
                 </ul>
               </p>
               <!-- Create a Module -->
-              <div v-if="step === 1" class="form-style-6">
-                <h1>Create A Module</h1>
-                
-                <br>Module Name: <input type="text" placeholder="Module Name" v-model="module" />
-                <br>
+              <div v-if="step === 1">
+                <h1>Create a Module</h1>
+                <br>Module Name: <input placeholder="Module name" v-model="module" />
                 <br>Module Start date: <input type="date" v-model="startdate" />
-                <br>
                 <br>Module End date: <input type="date" v-model="enddate" />
-                <br>
                 <button type="button" @click="nextStep">Next</button>
-                
               </div>
               <!-- Add Assessment for Module -->
               <div v-if="step === 2">
@@ -104,9 +99,6 @@ else{
                 <div>
                   <h1>Add Students to Module</h1>
                   <br>
-                  {{ step }}
-                  {{ students.length }}
-                  {{ errors.length }}
                     <input type="file" v-on:change="handleUpload" accept=".csv"/>
                     <div v-if="students.length != 0" v-for="student in students">
                         id: {{ student}}
@@ -135,43 +127,97 @@ else{
           <button type="button" @click="prevStep">Go Back</button>
           <button type="button" @click="nextStep();addModule();">Confirm</button>';
             if($Details->getMod() != ""){
-             
                 header("Location:createPageProf.php");
             }
         echo '</div>';
-        
-      echo ' </div>';
-                    echo '<div v-if="step === 5">
+        echo ' </div>';
+        echo '<div v-if="step === 5">
                 <div>
                 <h2>Success</h2>';
                   echo '<button type="submit">Back to dashboard</button>
                 </div>
               </div>';
-      
             echo '</form>';
         }else{
              $module = $Details->getMod();
+             $studentList = $_SESSION["studentList"];
              echo "
                  <div class='container' id='widgetC'>
-                 <h2 align =".'center'.">Current Module : ". $module->getMod()."</h2> 
                  <table style='width: 100%;' class='modTab'>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Module: ". $module->getMod()."</th>                            
+                 </tr>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Total Enrolled: ". (string)((int)$module->getTotalEnroll() - 1)."</th>                            
+                 </tr>                 
                  <tr>
                      <th>Component</th>
                      <th>Sub-Component</th>
-                     <th>Weight</th>
+                     <th>Weight in %</th>
                </tr>";
              foreach ($module->getAllComponent() as $f){
                  foreach($f -> getSub() as $g){
                      echo "<tr>";
-                     echo "<td>".$f->getName()."</th>";
-                     echo "<td>".$g->getName()."</th>";
-                     echo "<td>".$g->getWeight()."</th>";
+                     echo "<td>".$f->getName()."</td>";
+                     echo "<td>".$g->getName()."</td>";
+                     echo "<td>".$g->getWeight()."</td>";
                      echo "</tr>";
                  }
              }
              echo "</td>";
              echo "</tr></table></div>";
-             
+             echo "<div class='container' id='studentC'>
+                    <table style='width: 100%;' class='modTab'>
+                         <tr>
+                             <th colspan='8' style='text-align: center;'>Enrolled Students</th>                            
+                         </tr>
+                         <tr>
+                             <th>ID</th>
+                             <th>Name</th>
+                             <th>Email</th>
+                             <th>Phone No.</th>
+                             <th>Formative Feedbacks</th>
+                             <th>Subject</th>
+                             <th>Scores</th>
+                             <th>Summative Feedback</th>
+                       </tr>";
+             //students
+            foreach($studentList->SelectAll() as $f){
+                echo "<tr>";
+                echo "<td>".$f->getUser()."</td>";
+                echo "<td>".$f->getName()."</td>";
+                echo "<td>".$f->getEmail()."</td>";
+                echo "<td>".$f->getTel()."</td>";
+                echo "<td><select class='form-control' name='test' readonly>";
+                if(count($f->getMod()->getFormativeFeedback()) > 0){
+                    foreach($f->getMod()->getFormativeFeedback() as $s){
+                        echo "<option>".$s."</option>";
+                    }
+                }
+                else{
+                    echo "<option>No Feedbacks Given</option>";
+                }
+                echo "</select></td>";
+                //subcomponent
+                echo "<td colspan='3'><select class='form-control' name='test' readonly>";
+                foreach($f->getMod()->getAllComponent() as $comp){
+                    foreach($comp->getSub() as $cs){
+                        echo "<option>";
+                        echo $cs->getName();
+                        if($cs->getScores() != NULL){
+                            echo ", ", $cs->getScores() . ", ";
+                            echo $cs->getSummativeFeedback();
+                        }else{
+                            echo ", No Scores, No Feedbacks";
+                        }
+                        echo "</option>";
+                    }
+                }
+                echo "</select></td>";
+
+            }
+            echo"   </table>
+                </div>";
          }
         include "footer.php";
     ?>  

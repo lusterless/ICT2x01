@@ -8,29 +8,29 @@
 
 class usersFactory{
     public static function createUser($row, $conn){
+        $role = $row["role"];
         $username = $row["email"];
-        $user = new users($row["tel"], $row["name"], $row["studentid"], $row[ "role"], $row["email"]); //create object variable  
-        if($row["module"]!=""){
-            //store into session variables
-            $modulee = self::getModuleInfo($conn,$row["module"]);
-            $user->setMod($modulee);
-        }
-        $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-        return $user; //return object variable 
-    }
-    
-    public static function getAllEnrollStudents($conn,$mod){
-        $studentsList = new ProfessorDictionaryAdapter();
-        $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
-        while($totalEnrolRow = $totalEnrolResult->fetch_assoc()){
-            if($totalEnrolRow["role"] != "professor"){
-                $user = self::createUser($totalEnrolRow, $conn);
-                $studentsList->Insert($user);
+        if($role == "professor"){
+            $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $professor->setMod($modulee);
             }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $professor; //return object variable 
+        }else{
+            $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
+            if($row["module"]!=""){
+                //store into session variables
+                $modulee = self::getModuleInfo($conn,$row["module"]);
+                $student->setMod($modulee);
+            }
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            return $student; //return object variable             
         }
-        return $studentsList;
     }
-    
+    //get module info for module table
     public static function getModuleInfo($conn,$mod){
         $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
         $modResult = $conn->query("SELECT * FROM Module WHERE module_id='$mod'");
@@ -51,7 +51,53 @@ class usersFactory{
         }
         return $modulee;
     }
-        public static function filterStrings($data){
+    //get all enrolled students, function for professor (Adaptor)
+    public static function getAllEnrollStudents($conn,$mod){
+        $studentsList = new ProfessorDictionaryAdapter();
+        $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
+        while($totalEnrolRow = $totalEnrolResult->fetch_assoc()){
+            if($totalEnrolRow["role"] != "professor"){
+                $user = self::createUser($totalEnrolRow, $conn);
+                $user = self::getSummativeFeedback($conn, $user);
+                $user = self::getFormativeFeedback($conn, $user);
+                $studentsList->Insert($user);
+            }
+        }
+        return $studentsList;
+    }
+    
+    //getFeedbacks for Students
+    public static function getSummativeFeedback($conn, $user){
+        $id = $user->getUser();
+        $summativeComments = $conn->query("SELECT * FROM userSummative WHERE studentid='$id'");
+        if($summativeComments->num_rows > 0){
+            while($summativeCrows = $summativeComments->fetch_assoc()){
+                foreach($user->getMod()->getAllComponent() as $c){
+                    foreach($c->getSub() as $f){
+                        $subName = $f->getName();
+                        if($subName ==  $summativeCrows["subAssessment_name"]){
+                            $f->giveSummativeFeedback($summativeCrows["summative_feedback"], $summativeCrows["summative_score"], $summativeCrows["seen"]);
+                        }
+                    }
+                }
+            }
+        }
+        return $user;
+    }
+    //give formative
+    public static function getFormativeFeedback($conn, $user){
+        $id = $user->getUser();
+        $formativeComments = $conn->query("SELECT * FROM userFormative WHERE studentid='$id'");
+        if($formativeComments->num_rows > 0){
+            while($formativeRows = $formativeComments->fetch_assoc()){
+                $module = $user->getMod();
+                $module->giveFormativeFeedback($formativeRows["formative_feedback"]);
+            }
+        }
+        return $user;
+    }
+    
+    public static function filterStrings($data){
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);

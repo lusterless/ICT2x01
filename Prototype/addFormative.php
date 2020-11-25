@@ -27,6 +27,9 @@ $module = $Details->getMod();
     <title>Update Record</title>
     <link rel="stylesheet" href="css/feedbacks.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/addFormative.js" type="text/javascript"></script>
 </head>
     <?php include 'navBar.php';?>
     <div class="wrapper">
@@ -37,13 +40,13 @@ $module = $Details->getMod();
                         <h2>Add Formative Feedback</h2>
                     </div>
                     <p>Please edit the input values and submit to update the record.</p>
-                    <form action="feedbackBackend.php" method="post">
+                    <form action="formativeBackend.php" method="post">
                         <div class="form-group">
                             <label>Choose Students</label>
                             <div class="scrollableList">
                             <?php
                                 foreach($studentList->SelectAll() as $eachStudent){
-                                    echo "<input type='checkbox' name='".$eachStudent->getUser()."' value='".$eachStudent->getUser()."'/>";
+                                    echo "<input type='checkbox' name='studentList[]' value='".$eachStudent->getUser()."'/>";
                                     echo "<label for='".$eachStudent->getUser()."'>".strtolower($eachStudent->getName())."</label><br>";
                                 }
                             ?>
@@ -51,11 +54,23 @@ $module = $Details->getMod();
                         </div>
                         <div class="form-group">
                             <label>Feedback</label>
-                            <textarea name="feedback" class="form-control" required></textarea>
+                            <textarea name="feedback" class="form-control"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label>Import Feedback</label>
+                            <input type="file" onchange="return fileValidation()" id="formativeFile" name="formativeFile" accept=".xls,.xlsx"/>
+                        </div>
+                        <input type="hidden" id="arrayFeedback" name="arrayFeedback" value="">
+                        <input type="hidden" name="formativePage" value="formativePage">
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>
+                    <?php
+                        if(isset($_SESSION["msg"])){
+                            $msg = $_SESSION["msg"];
+                            echo "<p>".$msg."</p";
+                        }
+                    ?>
                 </div>
             </div>        
         </div>
@@ -65,3 +80,7 @@ $module = $Details->getMod();
     ?>
 </body>
 </html>
+
+<?php
+unset($_SESSION["msg"]);
+?>

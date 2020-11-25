@@ -4,11 +4,9 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<a href="feedbacks.class.php"></a>
 <?php
-
-include "classes/feedbacks.class.php";
-
+include "IFeedbackComponent.php";
+include "feedbacks.class.php";
 /*Example codes
  * $module = new Module(ICT2x01, 17/10/20, 20/12/20, 50)
  * $module->pushComponent(Exam, 40)
@@ -16,9 +14,8 @@ include "classes/feedbacks.class.php";
  * $tempComp->pushSubComponent(Exam1, 20)
  * $tempComp->pushSubComponent(Exam2, 20)
  * ######Composition Code########
- * 
  *  */
-class Module{
+class Module implements ifeedback{
     private $modID, $startDate, $endDate, $totalEnrol, $modNo;
     private $formativeFeedback = [];
     private $components = [];
@@ -31,24 +28,35 @@ class Module{
     }
     public function pushComponent($componentID, $componentName, $componentWeight){
         $comp = new Component($componentID, $componentName, $componentWeight);
-        //$this->components = array_push($this->components, (object) $comp);
         $this->components[] = $comp;
-    }
-    public function giveFormativeFeedback($feedback){
-        $fb = new formativeFeedback($feedback);
-        //$this->formativeFeedback = array_push($this->formativeFeedback, (object) $fb);
-        $this->formativeFeedback[] = $fb;
     }
     public function getNumber(){return $this->modNo;}
     public function getMod(){return $this->modID;}
     public function getStart(){return $this->startDate;}
     public function getEnd(){return $this->endDate;}
-    public function getAllComponent(){return $this->components;}
-    //public function getComponent($number){return $this->components[$number];
-    #eg; component[0]
-    //}
     public function getTotalEnroll(){return $this->totalEnrol;}
-    public function getFormativeFeedbacks(){return $this->formativeFeedback;}
+    public function getAllComponent(){return $this->components;}
+    //ifeedback interface
+    public function getScores(){throw new Exception("Not implemented");}
+    public function getSeen(){throw new Exception("Not implemented");}
+    public function giveSeen($seen){throw new Exception("Not implemented");}
+    public function giveScores($scores){throw new Exception("Not implemented");}
+    public function giveSummativeFeedback($feedback, $scores, $seen){throw new Exception("Not implemented");}
+    public function getSummativeFeedback(){throw new Exception("Not implemented");}
+    public function giveFormativeFeedback($feedback){
+        $fb = new formativeFeedbacks($feedback);
+        $this->formativeFeedback[] = $fb;
+    }
+    /*composite getFormativefeedback(). The leaf is the formativefeedback class itself which implementes ifeedback interface class.
+    This module class also implements ifeedback interface class. Performs recursive formativeFeedback retrieval as 1 user can have
+    more than 1 feedback*/
+    public function getFormativeFeedback(){
+        $allFormative = [];
+        foreach($this->formativeFeedback as $f){
+            $allFormative[] = $f->getFormativeFeedback();
+        }
+        return $allFormative;
+    }
 }
 
 class Component{
@@ -70,19 +78,24 @@ class Component{
     public function getName(){return $this->componentName;}
 }
 
-
-
-class subComponent{
+class subComponent implements ifeedback{
     private $subComponentName, $subComponentWeight, $summativeFeedback;
     public function __construct($name, $weight){
         $this->subComponentName = $name;
         $this->subComponentWeight = $weight;
     }
-    public function giveSummativeFeedback($score,$fb){
-        #summativeFeedbacks unlikes formativefeedback is not an array because each subcomponent only have 1 feedback,
-        # but each component can have 4 subcomponents which will have up to 4 comments
-        $this->summativeFeedback = new summativeFeedbacks($score,$fb);
-    }
     public function getName(){return $this->subComponentName;}
     public function getWeight(){return $this->subComponentWeight;}
+    //ifeedback
+    public function giveSummativeFeedback($feedback, $scores, $seen){
+        $summative = new summativeFeedbacks($feedback, $scores, $seen);
+        $this->summativeFeedback = $summative;
+    }
+    public function getSummativeFeedback(){return $this->summativeFeedback->getSummativeFeedback();}
+    public function getScores(){return $this->summativeFeedback->getScores();}
+    public function getSeen(){return $this->summativeFeedback->getSeen();}
+    public function giveSeen($seen){$this->summativeFeedback->giveSeen($seen);}
+    public function giveFormativeFeedback($feedback){throw new Exception("Not implemented");}
+    public function getFormativeFeedback(){throw new Exception("Not implemented");}
+    public function giveScores($scores){throw new Exception("Not implemented");}
 }

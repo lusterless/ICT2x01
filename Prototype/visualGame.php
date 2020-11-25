@@ -21,13 +21,27 @@ else{
 }    
 
 $module = $oldStartDate = $newStartDate = $oldEndDate = $newEndDate = "";
-
+$summativeArray = [];
 if($Details->getMod() != ""){
     $module = $Details->getMod();
     $oldStartDate = explode('-',$module->getStart());
     $newStartDate = $oldStartDate[1] . '/' . $oldStartDate[2] . '/' . $oldStartDate[0];
     $oldEndDate = explode('-', $module->getEnd());
-    $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];   
+    $newEndDate = $oldEndDate[1] . '/' . $oldEndDate[2] . '/' . $oldEndDate[0];
+    foreach ($module->getAllComponent() as $f){
+        foreach($f -> getSub() as $g){
+            if($g->getScores() != null && $g->getSummativeFeedback() != null){
+                $tempArray = [];
+                $tempArray[] = $g->getName();
+                $tempArray[] = $g->getWeight();
+                $tempArray[] = $g->getScores();
+                $tempArray[] = $g->getSummativeFeedback();
+                $tempArray[] = $g->getSeen();
+                $tempArray[] = $Details->getUser();
+                $summativeArray[] = $tempArray;
+            }
+        }
+    }
 }
 ?>
 <html lang="en">
@@ -45,7 +59,6 @@ if($Details->getMod() != ""){
                 echo "<h1>No Module Enrolled</h1>";
             }
             else{
-                $module = $Details->getMod();
                 echo "
                     <div class='container' id='widgetC'>
                     <table style='width: 100%;' class='modTab'>
@@ -56,7 +69,7 @@ if($Details->getMod() != ""){
                     <tr>
                         <th>Component</th>
                         <th>Sub-Component</th>
-                        <th>Weight</th>
+                        <th>Weight in %</th>
                   </tr>";
                 foreach ($module->getAllComponent() as $f){
                     foreach($f -> getSub() as $g){
@@ -78,13 +91,12 @@ if($Details->getMod() != ""){
             <div class="modal-content">
                 <div class="modal-header">
                   <span class="close">&times;</span>
-                  <h2>Grades & Comments <span class="glyphicon glyphicon-user"></span> </h2>
+                  <h2>Summative Grades</h2>
                 </div>
-                <div class="modal-body">
-                  Test
+                <div class="modal-body" id='summativeBody'>
                 </div>
-                <div class="modal-footer">
-                  <h3>Modal Footer</h3>
+                <div class="modal-footer" style="text-align: center;">
+                  <p>© 2013 - Singapore Institute of Technology</p>
                 </div>
             </div>
         </div>
@@ -92,20 +104,32 @@ if($Details->getMod() != ""){
             <div class="modal-content">
                 <div class="modal-header">
                   <span class="close">&times;</span>
-                  <h2>Comments <span class="glyphicon glyphicon-user"></span> </h2>
+                  <h2>Formative Feedback</h2>
                 </div>
-                <div class="modal-body">
-                  Test
+                <div class="modal-body" id='formativeBody'>
+                    <?php
+                        $formativeArray = $module->getFormativeFeedback();
+                        if(count($formativeArray) > 0){
+                            $counter = 1;
+                            foreach($formativeArray as $fb){
+                                echo "<p>".$counter.") ".$fb."</p>";
+                                $counter += 1;
+                            }
+                        }else{
+                            echo "<p>No Feedbacks Given</p>";
+                        }
+                    ?>
                 </div>
-                <div class="modal-footer">
-                  <h3>Modal Footer</h3>
+                <div class="modal-footer" style="text-align: center;">
+                  <p>© 2013 - Singapore Institute of Technology</p>
                 </div>
             </div>
         </div>
     </body>
     <script type="text/javascript"> 
+        summativeArray = <?php echo json_encode($summativeArray); ?>;
         startDate = <?php echo json_encode($newStartDate); ?>;
         endDate = <?php echo json_encode($newEndDate); ?>;
     </script>
-    <script src="js/visualGame.js" type="text/javascript"> </script>
+    <script src="js/visualGame.js" type="text/javascript"></script>
 </html>
