@@ -1,5 +1,6 @@
 <?php
 // Include config file
+include "sqlConnection.php";
 include "classes/users.class.php";
 include "classes/module.class.php";
 include "classes/ProfessorDictionaryAdapter.php";
