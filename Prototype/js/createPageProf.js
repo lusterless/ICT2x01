@@ -1,263 +1,227 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<?php
+include "classes/users.class.php";
+include "classes/module.class.php";
+include "classes/ProfessorDictionaryAdapter.php";
 
-var app = new Vue({
-    el: "#app",
-    data: {
-        errors: [],
-        step: 1,
-        module: null,
-        currentdate:null,
-        startdate: null,
-        enddate: null,
-        fileName: "",
-        students: [],
-        moduleno: null,
-        database: "",
-        csvfile: null,
-        categories: ["CA", "Exam", "CT"],
-        totalWeightage: 100,
-        assessments: [
-            {
-                category: "CA",
-                weightage: 100,
-                subAssessments: [
-                    {
-                        name: "",
-                        weightage: 0,
-                    },
-                ],
-            },
-        ],
-    },
-    methods: {
-        async nextStep() {
-            this.errors = [];
-            var today = new Date();
-            var date = today.toJSON().slice(0, 10); 
-            this.currentdate = date.slice(0, 4) + '-'  
-                       + date.slice(5, 7) + '-'  
-                       + date.slice(8, 10); 
-            switch (this.step) {
-                case 1:
-                    if (!this.module) {
-                        this.addError("Module name required!");
-                    }
-                    else if (this.module.length < 5) {
-                        this.addError("Module name cannot be lesser than 5 characters");
-                    }
-                    else if (this.module.length > 50) {
-                        this.addError("Module name cannot be more than 50 characters");
-                    }
-                    else if (!this.startdate) {
-                        this.addError("Start date required!");
-                    }
-                    else if (!this.enddate) {
-                        this.addError("End date required!");
-                    }
-                    else if (this.startdate < this.currentdate) {
-                        this.addError("Start date cannot be in the past!");
-                    }
-                    else if (this.enddate < this.currentdate) {
-                        this.addError("End date cannot be in the past!");
-                    }
-                    else if (this.enddate < this.startdate) {
-                        this.addError("End date cannot be earlier than start date!");
-                    }
-                    break;
-                case 2:
-                    if (this.assessments.length > 0) {
-                        this.checkAssessments();
-                        await axios.post("ajaxfile.php", {
-                            request: 7,
-                            moduleno: this.moduleno
-                        }).then((response) => {
-                            var res = response.data.split("\n");
-                            this.moduleno = res.pop();
-                        });
-                    }
-                    break;
-                case 3:
-                    if (this.students.length <= 0) {
-                        this.addError("There are no students!");
-                    } else {
-                        var count = 0;
-// Query database to check if ALL ids in this.students match an existing id
-                        await axios.post("ajaxfile.php", {
-                            request: 6,
-                            studentids: this.students
-                        }).then((response) => {
-                            var res = response.data.split("\n");
-                            count = res.pop();
-                            if (Number(count) !== this.students.length) {
-                                this.addError("There are invalid ids in your .csv!");
-                            }
-                        });
-                    }
-                    break;
-                default:
-                    break;
+session_start();
+$Details = "";
+if(!isset($_SESSION['sessionInfo'])){
+    header("Location:loginPage.php");
+}
+else{
+    $Details = $_SESSION['sessionInfo'];
+    if($Details->getRole() != "professor"){
+        header("Location:loginPage.php");
+    }
+}
+?>
+
+<html lang="en">
+  <style>table {
+  border-collapse: collapse;
+}</style>
+  <head>
+    <title>Create a module</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <?php
+        include "navBar.php";
+    
+        if($Details->getMod() == "")
+        {
+           echo '<form id="app" class="container" action="success.php" method="post" @submit="submit">
+              <!-- Error Banner -->
+              <p v-if="errors.length">
+                <b>Please correct the following error(s):</b>
+                <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                </ul>
+              </p>
+              <!-- Create a Module -->
+              <div v-if="step === 1">
+                <h1>Create a Module</h1>
+                <br>Module Name: <input placeholder="Module name" v-model="module" />
+                <br>Module Start date: <input type="date" v-model="startdate" />
+                <br>Module End date: <input type="date" v-model="enddate" />
+                <button type="button" @click="nextStep">Next</button>
+              </div>
+              <!-- Add Assessment for Module -->
+              <div v-if="step === 2">
+                <h1>Add Assessment for Module {{ module }}</h1>
+                <div v-for="(assessment, index) in assessments">
+                  <div>
+                    <h2>Assessment {{ index + 1 }}</h2>
+                    <select v-model="assessment.category">
+                      <option disabled value="">Please select one</option>
+                      <option v-for="category in categories">{{ category }}</option>
+                    </select>
+                    <input type="text" v-model="assessment.weightage" />
+                    <button type="button"v-show="assessments.length > 1" @click="removeAssessment(index)">
+                      Remove Assessment
+                    </button>
+                  </div>
+                  <div>
+
+                    <h3>Sub-assessments for Assessment {{ index + 1 }}</h3>
+                    <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
+                      <input type="text" v-model="subAssessment.name" />
+                      <input type="text" v-model="subAssessment.weightage" />
+                      <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button> 
+                      <button type="button" v-show="assessment.subAssessments.length > 1" @click="removeSubAssessment(index, subIndex)">
+                        Remove Subassessment
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="add" @click="addAssessment">
+                  Add Assessment
+                </button>
+                <div>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
+              <!-- Add Students -->
+              <div v-if="step === 3">
+                <div>
+                  <h1>Add Students to Module</h1>
+                  <br>
+                    <input type="file" v-on:change="handleUpload" accept=".csv"/>
+                    <div v-if="students.length != 0" v-for="student in students">
+                        id: {{ student}}
+                    </div>
+                  <button type="button" @click="prevStep">Go Back</button>
+                  <button type="button" @click="nextStep">Next</button>
+                </div>
+              </div>
+              <!-- Confirmation -->
+      <div v-if="step === 4">
+        <div>
+            <h1>Confirmation page</h1>
+            <br>
+            <h5>Module Name: {{ module }}</h5>
+            <h5>Module Start Date: {{ startdate }}</h5>
+            <h5>Module End Date: {{ enddate }}</h5>
+        <div v-for="(assessment, index) in assessments">
+          <div>
+            <h5>Assessment {{ index + 1 }} : {{ assessment.category }}</h5>
+            <h5>Assessment {{ index + 1 }} Weightage : {{ assessment.weightage}}</h5>
+            <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
+                <h5>Sub Assessment {{ subIndex + 1 }} : {{ subAssessment.name }} : {{ subAssessment.weightage }}</h5>
+            </div>
+          </div>
+        </div>
+          <button type="button" @click="prevStep">Go Back</button>
+          <button type="button" @click="nextStep();addModule();">Confirm</button>';
+            if($Details->getMod() != ""){
+                header("Location:createPageProf.php");
             }
-            if (this.errors.length === 0) {
-                this.$set(this, "step", this.step + 1);
-            }
-        },
-        handleUpload(event) {
-            const file = event.target.files[0];
-            this.fileName = file.name;
-            const reader = new FileReader();
-            var ids = [];
-            reader.onload = event => {
-                if (this.fileName.endsWith(".csv")) {
-                    var result = event.target.result;
-                    result = result.split(/\r\n|\n/);
-                    for (const id of result) {
-                        if (id !== "id" && id.trim().length > 0) {
-                            ids.push(id.trim());
+        echo '</div>';
+        echo ' </div>';
+        echo '<div v-if="step === 5">
+                <div>
+                <h2>Success</h2>';
+                  echo '<button type="submit">Back to dashboard</button>
+                </div>
+              </div>';
+            echo '</form>';
+        }else{
+             $module = $Details->getMod();
+             $studentList = $_SESSION["studentList"];
+             echo "
+                 <div class='container' id='widgetC'>
+                 <table style='width: 100%;' class='modTab'>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Module: ". $module->getMod()."</th>                            
+                 </tr>
+                 <tr>
+                    <th colspan='3' style='text-align: center;'>Total Enrolled: ". (string)((int)$module->getTotalEnroll() - 1)."</th>                            
+                 </tr>                 
+                 <tr>
+                     <th>Component</th>
+                     <th>Sub-Component</th>
+                     <th>Weight in %</th>
+               </tr>";
+             foreach ($module->getAllComponent() as $f){
+                 foreach($f -> getSub() as $g){
+                     echo "<tr>";
+                     echo "<td>".$f->getName()."</td>";
+                     echo "<td>".$g->getName()."</td>";
+                     echo "<td>".$g->getWeight()."</td>";
+                     echo "</tr>";
+                 }
+             }
+             echo "</td>";
+             echo "</tr></table></div>";
+             echo "<div class='container' id='studentC'>
+                    <table style='width: 100%;' class='modTab'>
+                         <tr>
+                             <th colspan='8' style='text-align: center;'>Enrolled Students</th>                            
+                         </tr>
+                         <tr>
+                             <th>ID</th>
+                             <th>Name</th>
+                             <th>Email</th>
+                             <th>Phone No.</th>
+                             <th>Formative Feedbacks</th>
+                             <th>Subject</th>
+                             <th>Scores</th>
+                             <th>Summative Feedback</th>
+                       </tr>";
+             //students
+            foreach($studentList->SelectAll() as $f){
+                echo "<tr>";
+                echo "<td>".$f->getUser()."</td>";
+                echo "<td>".$f->getName()."</td>";
+                echo "<td>".$f->getEmail()."</td>";
+                echo "<td>".$f->getTel()."</td>";
+                echo "<td><select class='form-control' name='test' readonly>";
+                if(count($f->getMod()->getFormativeFeedback()) > 0){
+                    foreach($f->getMod()->getFormativeFeedback() as $s){
+                        echo "<option>".$s."</option>";
+                    }
+                }
+                else{
+                    echo "<option>No Feedbacks Given</option>";
+                }
+                echo "</select></td>";
+                //subcomponent
+                echo "<td colspan='3'><select class='form-control' name='test' readonly>";
+                foreach($f->getMod()->getAllComponent() as $comp){
+                    foreach($comp->getSub() as $cs){
+                        echo "<option>";
+                        echo $cs->getName();
+                        if($cs->getScores() != NULL){
+                            echo ", ", $cs->getScores() . ", ";
+                            echo $cs->getSummativeFeedback();
+                        }else{
+                            echo ", No Scores, No Feedbacks";
                         }
-                    }
-                    this.students = ids;
-                } else {
-                    this.students = [];
-                    alert("Please upload only .csv files!");
-                }
-            };
-            reader.readAsText(file);
-        },
-        prevStep() {
-            if (this.step > 1) {
-                this.errors = [];
-                this.$set(this, "step", this.step - 1);
-            }
-        },
-        addModule: function () {
-            if (this.module !== '' && this.startdate !== '' && this.enddate !== '') {
-                axios.post('ajaxfile.php', {
-                    request: 1,
-                    module: this.module,
-                    startdate: this.startdate,
-                    enddate: this.enddate,
-                    assessment: this.assessments,
-                    moduleno: this.moduleno
-                })
-                for (i = 0; i < this.assessments.length; i++) {
-                    axios.post('ajaxfile.php', {
-                        request: 2,
-                        assessmentid: i + 1,
-                        category: this.assessments[i].category,
-                        assessmentweightage: this.assessments[i].weightage,
-                        moduleno: this.moduleno
-                    })
-                }
-                for (i = 0; i < this.assessments.length; i++) {
-                    for (j = 0; j < this.assessments[i].subAssessments.length; j++) {
-                        axios.post('ajaxfile.php', {
-                            request: 3,
-                            assessmentid: i + 1,
-                            subassessmentname: this.assessments[i].subAssessments[j].name,
-                            subassessmentweightage: this.assessments[i].subAssessments[j].weightage,
-                            moduleno: this.moduleno
-                        })
+                        echo "</option>";
                     }
                 }
-                for (i = 0; i < this.students.length; i++) {
-                    axios.post('ajaxfile.php', {
-                        request: 4,
-                        student: this.students[i],
-                        moduleno: this.moduleno
-                    })
-                }
-//location.reload();
-//return false;
-                for (i = 0; i < this.assessments.length; i++) {
-                    for (j = 0; j < this.assessments[i].subAssessments.length; j++) {
-                        for (k = 0; k < this.students.length; k++) {
-                            axios.post('ajaxfile.php', {
-                                request: 5,
-                                assessmentid: i + 1,
-                                subassessmentname: this.assessments[i].subAssessments[j].name,
-                                student: this.students[k],
-                                moduleno: this.moduleno
-                            })
-                        }
-                    }
-                }
-            } else {
-                alert('Fill all fields.');
+                echo "</select></td>";
+
             }
-        },
-        addError(newError) {
-            this.errors.filter((err) => err === newError).length === 0
-                    ? this.errors.push(newError)
-                    : null;
-        },
-        addAssessment() {
-            if (this.assessments.length < this.categories.length) {
-                this.assessments.push({
-                    category: "",
-                    weightage: 0,
-                    subAssessments: [{name: "", weightage: 0}],
-                });
-            }
-        },
-        removeAssessment(index) {
-            if (this.assessments.length > 1) {
-                this.assessments.splice(index, 1);
-            }
-        },
-        addSubAssessment(index, subIndex) {
-            this.assessments[index].subAssessments.splice(subIndex + 1, 0, {
-                name: "",
-                weightage: 0,
-            });
-        },
-        removeSubAssessment(index, subIndex) {
-            if (this.assessments[index].subAssessments.length > 1) {
-                this.assessments[index].subAssessments.splice(subIndex, 1);
-            }
-        },
-        checkAssessments() {
-            let selectedCategories = new Set();
-            let currentTotalWeightage = 0;
-            if (this.assessments.length > 0) {
-            this.assessments.forEach((assessment) => {
-// Check assessment categories
-                !!assessment.category
-                        ? selectedCategories.add(assessment.category)
-                        : this.addError("Please enter a category for each assessment");
-                !!assessment.weightage
-                        ? (currentTotalWeightage += eval(assessment.weightage))
-                        : this.addError("Please enter a weightage for each assessment");
-// Check subassessments
-                let totalWeightage = 0;
-                assessment.subAssessments.forEach((sub) => {
-// Check subassessment names
-                    !!sub.name
-                            ? null
-                            : this.addError("Please enter a name for each subassessment");
-// Check subassessment weightages
-                    totalWeightage += eval(sub.weightage);
-                });
-// Check subassessment weightages
-                if (totalWeightage !== eval(assessment.weightage)) {
-                    this.addError(
-                            "Total subassessment weightage should add up to assessment weightage"
-                            );
-                }
-            });
-        }
-// Check for unique assessment categories
-            if (selectedCategories.size !== this.assessments.length) {
-                this.addError("Please choose unique categories for all assessments");
-            }
-// Check assessment weightages
-            else if (currentTotalWeightage !== eval(this.totalWeightage)) {
-                this.addError(
-                        `The total weightage for all assessments must equal to ${this.totalWeightage}`
-                        );
-            }
-        },
-        chooseFiles() {
-            document.getElementById("fileUpload").click()
-        },
-        submit() {},
-    },
-});
+            echo"   </table>
+                </div>";
+         }
+        include "footer.php";
+    ?>  
+    <script src="js/createPageProf.js"></script>
+  </body>
+</html>
+
