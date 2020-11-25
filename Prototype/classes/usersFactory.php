@@ -27,6 +27,8 @@ class usersFactory{
                 $student->setMod($modulee);
             }
             $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            $user = usersFactory::getSummativeFeedback($conn, $student);
+            $user = usersFactory::getFormativeFeedback($conn, $student);
             return $student; //return object variable             
         }
     }

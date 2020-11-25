@@ -38,8 +38,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
                     $user = usersFactory::createUser($row, $conn);
                     session_start();
                     if($row["role"] != "professor"){
-                        $user = usersFactory::getSummativeFeedback($conn, $user);
-                        $user = usersFactory::getFormativeFeedback($conn, $user);
+//                        $user = usersFactory::getSummativeFeedback($conn, $user);
+//                        $user = usersFactory::getFormativeFeedback($conn, $user);
                         $_SESSION["sessionInfo"]= $user;
                         header("Location:visualGame.php");
                     }else{
