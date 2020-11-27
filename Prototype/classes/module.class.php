@@ -47,9 +47,6 @@ class Module implements ifeedback{
         $fb = new formativeFeedbacks($feedback);
         $this->formativeFeedback[] = $fb;
     }
-    /*composite getFormativefeedback(). The leaf is the formativefeedback class itself which implementes ifeedback interface class.
-    This module class also implements ifeedback interface class. Performs recursive formativeFeedback retrieval as 1 user can have
-    more than 1 feedback*/
     public function getFormativeFeedback(){
         $allFormative = [];
         foreach($this->formativeFeedback as $f){
