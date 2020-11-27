@@ -11,6 +11,7 @@ include "classes/users.class.php";
 include "classes/module.class.php";
 include "classes/usersFactory.php";
 include "classes/ProfessorDictionaryAdapter.php";
+include "classes/feedbackFactory.php";
 
 session_start();
 $Details = "";
@@ -26,7 +27,7 @@ else{
 
 $msg = "";
 //summativeFeedback
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_POST["score"]) && $_POST["score"] >= 0 && $_POST["score"] <= 100) && isset($_POST["studentList"]) && (isset($_POST["feedback"]) && $_POST["feedback"]) != "" && isset($_POST["summativePage"])) {
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_POST["score"]) && $_POST["score"] >= 0 && $_POST["score"] <= 100) && isset($_POST["studentList"]) && (isset($_POST["feedback"]) && $_POST["feedback"]) != "" && isset($_POST["summative"])) {
     if ($conn->connect_error){
         $msg .= "Database Error\n";
     }else{
@@ -35,15 +36,16 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         $fb = usersFactory::filterStrings($_POST["feedback"]);
         $sub = usersFactory::filterStrings($_POST["sub"]);
         $score = $_POST["score"];
-        //adapter
         $studentList = $_SESSION["studentList"];
+        $feedbackType = $_POST["summative"];
         foreach($studentChosen as $sc){
             $sc = usersFactory::filterStrings($sc);
-            $conn->query("UPDATE userSummative SET summative_score='".$score."', summative_feedback='".$fb."', seen=0 WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
+            $summativeFeedback = feedbackFactory::createFeedback($feedbackType, $fb, $score);
+            $conn->query("UPDATE userSummative SET summative_score='".$summativeFeedback->getScores()."', summative_feedback='".$summativeFeedback->getSummativeFeedback()."', seen=0 WHERE studentid='".$sc."' AND subAssessment_name='".$sub."'");
             foreach($studentList->SelectByID($sc)->getMod()->getAllComponent() as $c){
                 foreach($c->getSub() as $s){
                     if($s->getName() == $sub ){
-                        $s->giveSummativeFeedback($fb, $score, 0);
+                        $s->giveSummativeFeedback($summativeFeedback->getSummativeFeedback(), $summativeFeedback->getScores(), 0);
                     }
                 }
             }  
@@ -52,7 +54,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
     }
     $_SESSION["msg"] = $msg;
     header("Location:addSummative.php");
-}elseif($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['sarrayFeedback']) && $_POST['sarrayFeedback']!="" && isset($_POST["summativePage"])&& isset($_POST["sub"]) ){
+}elseif($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['sarrayFeedback']) && $_POST['sarrayFeedback']!="" && isset($_POST["summative"])&& isset($_POST["sub"]) ){
     //import via files
     $checkerror = false;
     if ($conn->connect_error){
@@ -63,10 +65,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         $sub = usersFactory::filterStrings($_POST["sub"]);
         $studentList = $_SESSION["studentList"];
         //check for errors
+        $feedbackType = $_POST["summative"];
         foreach($information as $sf){
             $parafirst = $sf[0]; //id
             $parasec = $sf[1];    //fb
             $parathird = $sf[2];  //score
+            $summativeFeedback = feedbackFactory::createFeedback($feedbackType, $parasec, $parathird);
             if($studentList->SelectByID($parafirst) == false){
                 $checkerror = true;
                 $msg .= "<p>ID ". $parafirst . " does not exist or is not enrolled in this module currently</p>";
@@ -93,15 +97,15 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         //insert into db
         if($checkerror == false){
             foreach($information as $sf){
-                $parafirst = usersFactory::filterStrings($sf[0]); //id
-                $parasec = usersFactory::filterStrings($sf[1]);    //fb
-                $parathird = usersFactory::filterStrings($sf[2]);  //score
-                var_dump($parafirst);
-                $conn->query("UPDATE userSummative SET summative_score='".$parathird."', summative_feedback='".$parasec."', seen=0 WHERE studentid='".$parafirst."' AND subAssessment_name='".$sub."'");
+              //  $parafirst = usersFactory::filterStrings($sf[0]); //id
+               // $parasec = usersFactory::filterStrings($sf[1]);    //fb
+               // $parathird = usersFactory::filterStrings($sf[2]);  //score
+                //var_dump($parafirst);
+                $conn->query("UPDATE userSummative SET summative_score='".usersFactory::filterStrings($summativeFeedback->getScores())."', summative_feedback='".usersFactory::filterStrings($summativeFeedback->getSummativeFeedback())."', seen=0 WHERE studentid='".usersFactory::filterStrings($sf[0])."' AND subAssessment_name='".$sub."'");
                 foreach($studentList->SelectByID($parafirst)->getMod()->getAllComponent() as $c){
                     foreach($c->getSub() as $s){
                         if($s->getName() == $sub ){
-                            $s->giveSummativeFeedback($parasec, $parathird, 0);
+                            $s->giveSummativeFeedback(usersFactory::filterStrings($summativeFeedback->getSummativeFeedback()), usersFactory::filterStrings($summativeFeedback->getScores()), 0);
                         }
                     }
                 }      
