@@ -5,11 +5,13 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
+
 class feedbackFactory{
-    public static function addFormative($conn, $id, $feedback){
-        $conn->query("INSERT INTO userFormative (studentid, formative_feedback) VALUES ('".$id."','".$feedback."');");
-    }
-    public static function addSummative($conn, $id, $feedback, $subAss, $score){
-        $conn->query("INSERT INTO userSummative (studentid, summative_score, summative_feedback, subAssessment_name) VALUES ('".$id."','".$score."','".$feedback."','".$subAss."');");        
-    }
+     public static function createFeedback($feedbacktype, $feedback, $score, $seen = 0){
+         if($feedbacktype == "summative"){
+             return new summativeFeedbacks($feedback, $scores, $seen);
+         }elseif($feedbacktype == "formative"){
+             return new formativeFeedbacks($feedback);
+         }
+     }
 }

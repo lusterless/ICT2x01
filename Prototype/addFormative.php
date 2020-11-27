@@ -61,7 +61,7 @@ $module = $Details->getMod();
                             <input type="file" onchange="return fileValidation()" id="formativeFile" name="formativeFile" accept=".xls,.xlsx"/>
                         </div>
                         <input type="hidden" id="arrayFeedback" name="arrayFeedback" value="">
-                        <input type="hidden" name="formativePage" value="formativePage">
+                        <input type="hidden" name="formative" value="formative">
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>

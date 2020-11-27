@@ -80,7 +80,7 @@ $module = $Details->getMod();
                             <input type="file" onchange="return fileValidation()" id="summativeFile" name="summativeFile" accept=".xls,.xlsx"/>
                         </div>
                         <input type="hidden" id="sarrayFeedback" name="sarrayFeedback" value="">
-                        <input type='hidden' name='summativePage' value='summativePage'>
+                        <input type='hidden' name='summative' value='summative'>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="manageModule.php" class="btn btn-default">Cancel</a>
                     </form>

@@ -10,6 +10,7 @@ include "classes/users.class.php";
 include "classes/module.class.php";
 include "classes/usersFactory.php";
 include "classes/ProfessorDictionaryAdapter.php";
+include "classes/feedbackFactory.php";
 
 session_start();
 $Details = "";
@@ -25,7 +26,7 @@ else{
 
 //formativeFeedback
 $msg = "";
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["formativePage"]) && $_POST["feedback"] != "") {
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && isset($_POST["feedback"]) && isset($_POST["formative"]) && $_POST["feedback"] != "") {
     if ($conn->connect_error){
         $msg .= "Database Error\n";
     }else{
@@ -33,18 +34,20 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
         $studentChosen = $_POST["studentList"];
         $fb = usersFactory::filterStrings($_POST["feedback"]);
         //adapter
+        $feedbackType = $_POST["formative"];
         $studentList = $_SESSION["studentList"];
         //insert into db
         foreach($studentChosen as $sc){
             $sc = usersFactory::filterStrings($sc);
-            $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$sc."','".$fb."')");
-            $studentList->SelectByID($sc)->getMod()->giveFormativeFeedback($fb); //giveFormativefeedback;
+            $formativeFeedback = feedbackFactory::createFeedback($feedbackType, $fb, 0);
+            $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$sc."','".$formativeFeedback->getFormativeFeedback()."')");
+            $studentList->SelectByID($sc)->getMod()->giveFormativeFeedback($formativeFeedback->getFormativeFeedback()); //giveFormativefeedback;
         }
         $msg .= "Feedbacks added successfully";
     }
     $_SESSION["msg"] = $msg;
     header("Location:addFormative.php");
-} elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['arrayFeedback']) && $_POST['arrayFeedback']!="" && isset($_POST["formativePage"])) {
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset ($_POST['arrayFeedback']) && $_POST['arrayFeedback']!="" && isset($_POST["formative"])) {
     //import via files
     $checkerror = false;
     if ($conn->connect_error){
@@ -53,10 +56,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
         $information = json_decode($_POST['arrayFeedback'], true);
         //adapter
         $studentList = $_SESSION["studentList"];
+        $feedbackType = $_POST["formative"];
         //check if students exist
         foreach($information as $sf){
             $parafirst = $sf[0];
             $parasec = $sf[1]; 
+            $formativeFeedback = feedbackFactory::createFeedback($feedbackType, $parasec, 0);
             if($studentList->SelectByID($parafirst) == false){
                 $checkerror = true;
                 $msg .= "<p>ID ". $parafirst . " does not exist or is not enrolled in this module currently</p>";
@@ -75,8 +80,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
             foreach($information as $sf){
                 $parafirst = usersFactory::filterStrings($sf[0]);
                 $parasec = usersFactory::filterStrings($sf[1]); 
-                $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$parasec."')");
-                $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($parasec); //giveFormativefeedback;            
+                $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$formativeFeedback->getFormativeFeedback()."')");
+                $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($formativeFeedback->getFormativeFeedback()); //giveFormativefeedback;            
             }
             $msg .= "Files Feedbacks added successfully";
         }
