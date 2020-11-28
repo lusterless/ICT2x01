@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["login"])){
             $status = usersFactory::checkAccountLocked($row);
             if($row["password"] == $password){
                 if($status == true){
-                    $user = usersFactory::createUser($row, $conn);
+                    $user = usersFactory::createUser($row, $conn, $row["role"], $row["module"]);
                     session_start();
                     if($row["role"] != "professor"){
                         $_SESSION["sessionInfo"]= $user;

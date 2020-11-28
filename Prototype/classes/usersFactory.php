@@ -7,13 +7,12 @@
  */
 
 class usersFactory{
-    public static function createUser($row, $conn){
-        $role = $row["role"];
+    public static function createUser($row, $conn, $accountType, $moduleStatus){
         $username = $row["email"];
-        if($role == "professor"){
+        if($accountType == "professor"){
             $studentList = "";
             $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
-            if($row["module"]!=""){
+            if($moduleStatus!=""){
                 //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]);
                 $studentList = self::getAllEnrollStudents($conn, $row["module"]);
@@ -23,7 +22,7 @@ class usersFactory{
             return array($professor, $studentList); //return object variable 
         }else{
             $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
-            if($row["module"]!=""){
+            if($moduleStatus!=""){
                 //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]);
                 $student->setMod($modulee);
@@ -61,7 +60,7 @@ class usersFactory{
         $totalEnrolResult = $conn->query("SELECT * FROM users WHERE module='$mod'");
         while($totalEnrolRow = $totalEnrolResult->fetch_assoc()){
             if($totalEnrolRow["role"] != "professor"){
-                $user = self::createUser($totalEnrolRow, $conn);
+                $user = self::createUser($totalEnrolRow, $conn, $totalEnrolRow["role"], $totalEnrolRow["module"]);
                 $user = self::getSummativeFeedback($conn, $user);
                 $user = self::getFormativeFeedback($conn, $user);
                 $studentsList->Insert($user);
