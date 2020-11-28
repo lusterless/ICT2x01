@@ -51,9 +51,9 @@ Please read [CONTRIBUTING.md](https://github.com/lusterless/Singapore-Bus-Map-De
 ## Authors
 
 * **Koh Kai Quan** - [Lusterless](https://github.com/lusterless)
-* **Foo Chang Jie** [cj7changjie](https://github.com/cj7changjie)
-* **Soh Shi Qi**
-* **Yeo Khee Thong Joel**
+* **Foo Chang Jie** - [cj7changjie](https://github.com/cj7changjie)
+* **Soh Shi Qi** - [hippoqi](https://github.com/hippoqi)
+* **Yeo Khee Thong Joel** - [TheDarkMew](https://github.com/TheDarkMew)
 
 See also the list of [contributors](CONTRIBUTING.md) who participated in this project.
 
