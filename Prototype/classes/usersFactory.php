@@ -24,10 +24,10 @@ class usersFactory{
             if($moduleStatus!=""){ //if accountType == student && account enrolled into module
                 $modulee = self::getModuleInfo($conn,$row["module"]); //get module information to be displayed
                 $student->setMod($modulee); //set all the module information inside the class variable to be return
+                $student = usersFactory::getSummativeFeedback($conn, $student); //get summative feedback of particular student
+                $student = usersFactory::getFormativeFeedback($conn, $student); //get formative feedback of particular student
             }
             $conn->query("UPDATE users SET count='0' WHERE email='$username'"); //reset login count
-            $user = usersFactory::getSummativeFeedback($conn, $student); //get summative feedback of particular student
-            $user = usersFactory::getFormativeFeedback($conn, $student); //get formative feedback of particular student
             return $student; //return object variable             
         }
     }
