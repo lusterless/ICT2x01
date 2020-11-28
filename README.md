@@ -51,7 +51,7 @@ Please read [CONTRIBUTING.md](https://github.com/lusterless/Singapore-Bus-Map-De
 ## Authors
 
 * **Koh Kai Quan** - [Lusterless](https://github.com/lusterless)
-* **Foo Chang Jie**
+* **Foo Chang Jie** [cj7changjie](https://github.com/cj7changjie)
 * **Soh Shi Qi**
 * **Yeo Khee Thong Joel**
 
