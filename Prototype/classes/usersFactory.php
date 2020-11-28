@@ -11,14 +11,16 @@ class usersFactory{
         $role = $row["role"];
         $username = $row["email"];
         if($role == "professor"){
+            $studentList = "";
             $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
             if($row["module"]!=""){
                 //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]);
+                $studentList = self::getAllEnrollStudents($conn, $row["module"]);
                 $professor->setMod($modulee);
             }
             $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-            return $professor; //return object variable 
+            return array($professor, $studentList); //return object variable 
         }else{
             $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
             if($row["module"]!=""){
