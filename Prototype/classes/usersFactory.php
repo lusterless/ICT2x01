@@ -13,7 +13,6 @@ class usersFactory{
             $studentList = "";
             $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
             if($moduleStatus!=""){ //if accountType == professor && account enrolled into module
-                //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]); //get module information to be displayed
                 $studentList = self::getAllEnrollStudents($conn, $row["module"]); //get every student information and return it as a variable
                 $professor->setMod($modulee); //set all the module information inside the class variable to be return
@@ -23,7 +22,6 @@ class usersFactory{
         }else{ //account type is student
             $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
             if($moduleStatus!=""){ //if accountType == student && account enrolled into module
-                //store into session variables
                 $modulee = self::getModuleInfo($conn,$row["module"]); //get module information to be displayed
                 $student->setMod($modulee); //set all the module information inside the class variable to be return
             }
