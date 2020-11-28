@@ -8,28 +8,28 @@
 
 class usersFactory{
     public static function createUser($row, $conn, $accountType, $moduleStatus){
-        $username = $row["email"];
-        if($accountType == "professor"){
+        $username = $row["email"]; //username
+        if($accountType == "professor"){ // account type is professor
             $studentList = "";
             $professor = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
-            if($moduleStatus!=""){
+            if($moduleStatus!=""){ //if accountType == professor && account enrolled into module
                 //store into session variables
-                $modulee = self::getModuleInfo($conn,$row["module"]);
-                $studentList = self::getAllEnrollStudents($conn, $row["module"]);
-                $professor->setMod($modulee);
+                $modulee = self::getModuleInfo($conn,$row["module"]); //get module information to be displayed
+                $studentList = self::getAllEnrollStudents($conn, $row["module"]); //get every student information and return it as a variable
+                $professor->setMod($modulee); //set all the module information inside the class variable to be return
             }
-            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'"); //reset login count
             return array($professor, $studentList); //return object variable 
-        }else{
+        }else{ //account type is student
             $student = new users($row["tel"], $row["name"], $row["studentid"], $row["role"], $row["email"]); //create object variable  
-            if($moduleStatus!=""){
+            if($moduleStatus!=""){ //if accountType == student && account enrolled into module
                 //store into session variables
-                $modulee = self::getModuleInfo($conn,$row["module"]);
-                $student->setMod($modulee);
+                $modulee = self::getModuleInfo($conn,$row["module"]); //get module information to be displayed
+                $student->setMod($modulee); //set all the module information inside the class variable to be return
             }
-            $conn->query("UPDATE users SET count='0' WHERE email='$username'");
-            $user = usersFactory::getSummativeFeedback($conn, $student);
-            $user = usersFactory::getFormativeFeedback($conn, $student);
+            $conn->query("UPDATE users SET count='0' WHERE email='$username'"); //reset login count
+            $user = usersFactory::getSummativeFeedback($conn, $student); //get summative feedback of particular student
+            $user = usersFactory::getFormativeFeedback($conn, $student); //get formative feedback of particular student
             return $student; //return object variable             
         }
     }
