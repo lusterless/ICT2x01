@@ -24,14 +24,14 @@ HTTP or HTTPS webservice
 ```
 Database Server
 ```
-* Databases table format Files for import can be found in [Django\map\webmap\data](https://github.com/lusterless/Singapore-Bus-Map-Development/tree/master/Django/map/webmap/data)
+* Databases table format Files for import can be found in [Tables\](https://github.com/lusterless/ICT2x01/tree/main/Tables)
 
 
 ## Deployment
 
 Go to your browser and enter [URL](127.0.0.1/Prototype/loginPage.php)
 ```
-http://127.0.0.1/Prototype/loginPage.php
+127.0.0.1/Prototype/loginPage.php
 ```
 * Server's IP address is dynamic and varies between deployment types and organization. For more information, Please contact your administrator.
 
