@@ -36,7 +36,21 @@ else{
     <?php
         include "navBar.php";
     ?>
-      <div class="container" id="widgetContainer">
+    <div class ="container">
+      <div class="multi-button" id="widgetContainer">
+
+          <button class="paste" onclick="location.href='addSummative.php'"type="button"> <img src="images/rating.png">Add Summative Feedback</button>
+        <br>
+        <p></p>
+        <button class="paste" onclick="location.href='addFormative.php'"type="button"><img src="images/feedback.png">Add Formative Feedback</button>
+        <br>
+        <p></p>
+        <button class="paste" onclick="return deleteMod()"type="button"><img src="images/trash.png"> Delete Module</button>
+        <br>
+        <p></p>
+      </div>
+    </div>
+<!--      <div class="container" id="widgetContainer">
         <div class="row">
             <a href="addSummative.php">
                 <div class="manageWidget">
@@ -57,7 +71,7 @@ else{
                 </div>
             </a>
         </div>
-      </div>
+      </div>-->
     <?php
         include "footer.php";
     ?>  

@@ -17,6 +17,7 @@ and open the template in the editor.
 
 body {
     text-align: center;
+    
 }
 
 input::placeholder {
@@ -44,7 +45,7 @@ button:hover {
 }
 
 .form-style-6 {
-	max-width: 450px;
+	max-width: 600px;
 	background: #FAFAFA;
 	padding: 30px;
 	margin: 50px auto;
@@ -52,6 +53,13 @@ button:hover {
 	border-radius: 10px;
 	border: 6px solid #305A72;
 }
+
+.h5{
+    text-align: left;
+}
+
+
+
 
 .form-style-6 input[type="text"],
 .form-style-6 input[type="date"],

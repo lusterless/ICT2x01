@@ -31,7 +31,8 @@ else{
     <title>Create a module</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">        
+    <link rel="stylesheet" type="text/css" href="css/moduleTable.css">
+    <link rel="stylesheet" type="text/css" href="css/createPageProf.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
@@ -50,15 +51,16 @@ else{
                 </ul>
               </p>
               <!-- Create a Module -->
-              <div v-if="step === 1">
+              <div v-if="step === 1" class="form-style-6">
                 <h1>Create a Module</h1>
-                <br>Module Name: <input placeholder="Module name" v-model="module" required />
+                
+                <br>Module Name: <input type="text" placeholder="Module Name" v-model="module" required />
                 <br>Module Start date: <input type="date" v-model="startdate" required />
                 <br>Module End date: <input type="date" v-model="enddate" required />
                 <button type="button" @click="nextStep">Next</button>
               </div>
               <!-- Add Assessment for Module -->
-              <div v-if="step === 2">
+              <div v-if="step === 2" class="form-style-6">
                 <h1>Add Assessment for Module {{ module }}</h1>
                 <div v-for="(assessment, index) in assessments">
                   <div>
@@ -71,6 +73,7 @@ else{
                     <button type="button"v-show="assessments.length > 1" @click="removeAssessment(index)">
                       Remove Assessment
                     </button>
+					
                   </div>
                   <div>
 
@@ -78,17 +81,19 @@ else{
                     <div v-for="(subAssessment, subIndex) in assessment.subAssessments">
                       <input type="text" v-model="subAssessment.name" required />
                       <input type="text" v-model="subAssessment.weightage" required />
-                      <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button> 
+                      <button type="button" @click="addSubAssessment(index, subIndex)">Add Subassessment</button>
+						<p></p>
                       <button type="button" v-show="assessment.subAssessments.length > 1" @click="removeSubAssessment(index, subIndex)">
                         Remove Subassessment
                       </button>
-
+						<p></p>
                     </div>
                   </div>
                 </div>
                 <button type="button" id="add" @click="addAssessment">
                   Add Assessment
                 </button>
+				<p></p>
                 <div>
                   <button type="button" @click="prevStep">Go Back</button>
                   <button type="button" @click="nextStep">Next</button>
@@ -108,7 +113,7 @@ else{
                 </div>
               </div>
               <!-- Confirmation -->
-      <div v-if="step === 4">
+      <div v-if="step === 4" class="form-style-6">
         <div>
             <h1>Confirmation page</h1>
             <br>
