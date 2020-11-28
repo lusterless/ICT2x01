@@ -46,7 +46,7 @@ Go to your browser and enter [URL](http://127.0.0.1/Prototype/loginPage.php)
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/lusterless/Singapore-Bus-Map-Development/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/lusterless/ICT2x01/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
