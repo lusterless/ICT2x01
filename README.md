@@ -29,7 +29,7 @@ Database Server
 
 ## Deployment
 
-Go to your browser and enter [URL](127.0.0.1/Prototype/loginPage.php)
+Go to your browser and enter [URL](http://127.0.0.1/Prototype/loginPage.php)
 ```
 127.0.0.1/Prototype/loginPage.php
 ```
