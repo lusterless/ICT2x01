@@ -75,6 +75,11 @@ else{
                         <div class="input-group"><button>Login</button></div>
                     </form>
                 </section>
+                <?php
+                if(isset($_SESSION["errormsg"])){
+                    echo "<h3 style='color: red;'>".$_SESSION['errormsg']."</h3>";
+                }
+                ?>
             </div>
         </section>
     </body>
