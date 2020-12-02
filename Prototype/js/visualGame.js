@@ -65,10 +65,6 @@ var span1 = document.getElementsByClassName("close")[2];
 span.onclick = function() {
     modal.style.display = "none";  
     statusModalOpen = false;
-//    const summativeBody = document.getElementById("summativeBody");
-//    while (summativeBody.firstChild) {
-//      summativeBody.removeChild(summativeBody.lastChild);
-//    }
     location.reload(true);
  }
 span1.onclick = function() {
@@ -94,7 +90,6 @@ canvas.addEventListener('click', function(e) {
 //INITIALIZE IMAGE
 
 function imginit() {
-  // future animation code goes here
   //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   ctx.drawImage(img, 0, 170);
 }
@@ -127,10 +122,6 @@ function streasureinit(sub, weight, score, feedback, no, studentid) {
         }
     })
 }
-/*
-function bininit(){
-    ctx.drawImage(bin, 0, 0, 600, 60, 10, 100, 1200 , 120);
-}*/
 
 function dinoinit() {
   // future animation code goes here
@@ -192,12 +183,6 @@ function showSummative(sub, weight, score, feedback, studentid){
             //update array seen value
         }
     });
-    
-    //delete and reload canvas
-//    var oldcanv = document.getElementById('interactiveCanvas');
-//    ctx.clearRect(0,0, oldcanv.width, oldcanv.height);
-//    elements = [];
-//    loadPixel();
 }
 
 function showFormative(){
