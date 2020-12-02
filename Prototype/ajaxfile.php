@@ -21,16 +21,14 @@ $data = json_decode(file_get_contents("php://input"));
 
 $request = $data->request;
 $name = $Details->getName();
-#$module="";
-// Add record
+
+// Add record to users table and module table
 if ($request == 1) {
     $modulename = $data->module;
     $startdate = $data->startdate;
     $enddate = $data->enddate;
     $assessment = $data->assessments;
     $moduleid=$data->moduleno;
-#$module = new Module($modulename,$startdate,$enddate,'10','1');
-#$Details->setMod($module);
     $userData = mysqli_query($conn, "SELECT * FROM Module");
     if (mysqli_num_rows($userData) == 0) {
         mysqli_query($conn, "INSERT INTO Module(module_id,module_name,start_date,end_date) VALUES('1','" . $modulename . "','" . $startdate . "','" . $enddate . "')");
@@ -41,21 +39,24 @@ if ($request == 1) {
         mysqli_query($conn, "UPDATE users SET module='".$moduleid."' WHERE name='" . $name . "'");
     }
     exit;
-} else if ($request == 2) {
-#$oldmod = $Details->getMod();
+     
+} 
+
+//Add record to Assessment table, sets assessmentid as moduleid*3 + assessmentid-1
+//moduleid * 3 because there is a maximum of 3 assessments in a module, to ensure that the id is unique
+//assessmentid is based on assessment id, so it can only be 1,2,3. -1 to fit the numbers in nicely to make it unique
+else if ($request == 2) {
     $assessmentid = $data->assessmentid;
     $moduleid=$data->moduleno;
     $category = $data->category;
     $assessmentweightage = $data->assessmentweightage;
-    #$result = mysqli_query($conn, "SELECT module FROM users WHERE name='".$name."'");
-    #$row = mysqli_fetch_row($result);
-    #$moduleid=$row[0];
-#$oldmod->pushComponent($assessmentid, $category, $assessmentweightage);
-#$Details->setMod($oldmod);
     $assessmentid = $moduleid *3 + $assessmentid - 1;
     mysqli_query($conn, "INSERT INTO assessments(assessment_id,module_id,assessment_name,assessment_weightage) VALUES('" . $assessmentid . "','".$moduleid."','" . $category . "','" . $assessmentweightage . "')");
     exit;
-} else if ($request == 3) {
+} 
+
+//Add record to subAssessments table
+else if ($request == 3) {
     $assessmentid = $data->assessmentid;
     $subassessmentname = $data->subassessmentname;
     $subassessmentweightage = $data->subassessmentweightage;
@@ -63,31 +64,26 @@ if ($request == 1) {
     $subassessmentid = mysqli_num_rows($dataprobe) + 1;
     $moduleid=$data->moduleno;
     $assessmentid = ($moduleid * 3) + $assessmentid - 1;
-    #$result = mysqli_query($conn, "SELECT module FROM users WHERE name='".$name."'");
-    #$row = mysqli_fetch_row($result);
-    #$moduleid=$row[0];
-#$oldmod = $Details->getMod();
-#$tempComp = $oldmod->getComponent($assessmentid);
-#$tempComp->pushSubComponent($subassessmentname, $subassessmentweightage);
     mysqli_query($conn, "INSERT INTO subAssessments(assessment_id,subAssessment_name,subAssessment_weightage,module_id) VALUES('" . $assessmentid  . "','" . $subassessmentname . "','" . $subassessmentweightage . "','".$moduleid."')");
-#$Details->setMod($module);
     exit;
-} else if ($request == 4) {
+} 
+//setting moduleid to students in users table
+else if ($request == 4) {
     $student = $data->student;
     $moduleid=$data->moduleno;
-    #$result = mysqli_query($conn, "SELECT module FROM users WHERE name='".$name."'");
-    #$row = mysqli_fetch_row($result);
-   # $moduleid=$row[0];
     mysqli_query($conn, "UPDATE users SET module='".$moduleid."' WHERE studentid='" . $student . "'");
     exit;
-} else if ($request == 5) {
+} 
+//creating summative feedbacks per student
+else if ($request == 5) {
     $assessmentid = $data->assessmentid;
     $subassessmentname = $data->subassessmentname;
     $student = $data->student;
     mysqli_query($conn, "INSERT INTO userSummative(studentid,subAssessment_name) VALUES('" . $student . "','" . $subassessmentname . "')");
-#$Details->setMod($module);
     exit;
-} else if ($request == 6) {
+} 
+//ensuring that the students do not have a module tagged to them before assigning them to a module
+else if ($request == 6) {
     $studentids = $data->studentids;
     $queryString = "";
     for ($i = 0; $i < count($studentids); $i++) {
@@ -104,7 +100,7 @@ if ($request == 1) {
     }
     exit;
 }
-
+//ensuring that 3 in a row assessmentid is empty, so it will not have any collision
 else if ($request == 7) {
     $counter = True;
     $result = mysqli_query($conn, "SELECT * FROM Module");

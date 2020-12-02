@@ -37,6 +37,7 @@ var app = new Vue({
                        + date.slice(5, 7) + '-'  
                        + date.slice(8, 10); 
             switch (this.step) {
+                //error handling for page 1, mostly modulename, module dates
                 case 1:
                     if (!this.module) {
                         this.addError("Module name required!");
@@ -63,6 +64,8 @@ var app = new Vue({
                         this.addError("End date cannot be earlier than start date!");
                     }
                     break;
+                //error handling on page2, mainly on selecting a moduleid(refer to ajax) 
+                //as well as weightages and parameters on assessments and subassessments
                 case 2:
                     if (this.assessments.length > 0) {
                         this.checkAssessments();
@@ -75,12 +78,13 @@ var app = new Vue({
                         });
                     }
                     break;
+                //error handling on csv import, checking if students inside the file are valid ids
                 case 3:
                     if (this.students.length <= 0) {
                         this.addError("There are no students!");
                     } else {
                         var count = 0;
-// Query database to check if ALL ids in this.students match an existing id
+                        // Query database to check if ALL ids in this.students match an existing id
                         await axios.post("ajaxfile.php", {
                             request: 6,
                             studentids: this.students
@@ -128,6 +132,7 @@ var app = new Vue({
                 this.$set(this, "step", this.step - 1);
             }
         },
+        //parses variables over to the ajax file, check ajaxfile for more information on what each requests do
         addModule: function () {
             if (this.module !== '' && this.startdate !== '' && this.enddate !== '') {
                 axios.post('ajaxfile.php', {
@@ -165,8 +170,6 @@ var app = new Vue({
                         moduleno: this.moduleno
                     })
                 }
-//location.reload();
-//return false;
                 for (i = 0; i < this.assessments.length; i++) {
                     for (j = 0; j < this.assessments[i].subAssessments.length; j++) {
                         for (k = 0; k < this.students.length; k++) {
@@ -219,24 +222,24 @@ var app = new Vue({
             let currentTotalWeightage = 0;
             if (this.assessments.length > 0) {
             this.assessments.forEach((assessment) => {
-// Check assessment categories
+                // Check assessment categories
                 !!assessment.category
                         ? selectedCategories.add(assessment.category)
                         : this.addError("Please enter a category for each assessment");
                 !!assessment.weightage
                         ? (currentTotalWeightage += eval(assessment.weightage))
                         : this.addError("Please enter a weightage for each assessment");
-// Check subassessments
+                // Check subassessments
                 let totalWeightage = 0;
                 assessment.subAssessments.forEach((sub) => {
-// Check subassessment names
+                    // Check subassessment names
                     !!sub.name
                             ? null
                             : this.addError("Please enter a name for each subassessment");
-// Check subassessment weightages
+                    // Check subassessment weightages
                     totalWeightage += eval(sub.weightage);
                 });
-// Check subassessment weightages
+                // Check subassessment weightages
                 if (totalWeightage !== eval(assessment.weightage)) {
                     this.addError(
                             "Total subassessment weightage should add up to assessment weightage"
@@ -244,11 +247,11 @@ var app = new Vue({
                 }
             });
         }
-// Check for unique assessment categories
+            // Check for unique assessment categories
             if (selectedCategories.size !== this.assessments.length) {
                 this.addError("Please choose unique categories for all assessments");
             }
-// Check assessment weightages
+            // Check assessment weightages
             else if (currentTotalWeightage !== eval(this.totalWeightage)) {
                 this.addError(
                         `The total weightage for all assessments must equal to ${this.totalWeightage}`
