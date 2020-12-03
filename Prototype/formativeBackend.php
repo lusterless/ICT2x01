@@ -80,8 +80,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["studentList"]) && iss
             foreach($information as $sf){
                 $parafirst = usersFactory::filterStrings($sf[0]);
                 $parasec = usersFactory::filterStrings($sf[1]); 
-                $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$formativeFeedback->getFormativeFeedback()."')");
-                $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($formativeFeedback->getFormativeFeedback()); //giveFormativefeedback;            
+                $conn->query("INSERT INTO userFormative(studentid,formative_feedback) VALUES ('".$parafirst."','".$parasec."')");
+                $studentList->SelectByID($parafirst)->getMod()->giveFormativeFeedback($parasec); //giveFormativefeedback;            
             }
             $msg .= "Files Feedbacks added successfully";
         }

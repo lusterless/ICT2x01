@@ -98,10 +98,10 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["sub"]) && (isset($_PO
         if($checkerror == false){
             foreach($information as $sf){
                 $parafirst = usersFactory::filterStrings($sf[0]); //id
-                $parasec = usersFactory::filterStrings($summativeFeedback->getSummativeFeedback());    //fb
-                $parathird = usersFactory::filterStrings($summativeFeedback->getScores());  //score
+                $parasec = usersFactory::filterStrings($sf[1]);    //fb
+                $parathird = usersFactory::filterStrings($sf[2]);  //score
                 //var_dump($parafirst);
-                $conn->query("UPDATE userSummative SET summative_score='".usersFactory::filterStrings($summativeFeedback->getScores())."', summative_feedback='".usersFactory::filterStrings($summativeFeedback->getSummativeFeedback())."', seen=0 WHERE studentid='".usersFactory::filterStrings($sf[0])."' AND subAssessment_name='".$sub."'");
+                $conn->query("UPDATE userSummative SET summative_score='".$parathird."', summative_feedback='".$parasec."', seen=0 WHERE studentid='".$parafirst."' AND subAssessment_name='".$sub."'");
                 foreach($studentList->SelectByID($parafirst)->getMod()->getAllComponent() as $c){
                     foreach($c->getSub() as $s){
                         if($s->getName() == $sub ){
