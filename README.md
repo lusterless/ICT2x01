@@ -1,4 +1,4 @@
-# ICT 2x01
+# ICT 2x01 Software Engineering - Singapore Institute of Technology
 
 This program provides an interactive way for students and professors to CREATE, UPDATE, DELETE, VIEW modules and feedbacks. This program is created using web-based programming langanges (AJAX, PHP, HTML, JAVASCRIPT) and demonstrates the solution designs, design patterns, web-based object-oriented and class relationships (Composition & Aggregation).  
 - [x] Create Module
